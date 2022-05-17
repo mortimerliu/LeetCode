@@ -4,6 +4,341 @@ from collections import Counter, defaultdict
 from typing import List
 
 
+"""125. Valid Palindrome
+
+A phrase is a palindrome if, after converting all uppercase letters into 
+lowercase letters and removing all non-alphanumeric characters, it reads 
+the same forward and backward. Alphanumeric characters include letters 
+and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+Example 2:
+
+Input: s = "race a car"
+Output: false
+Explanation: "raceacar" is not a palindrome.
+Example 3:
+
+Input: s = " "
+Output: true
+Explanation: s is an empty string "" after removing non-alphanumeric characters.
+Since an empty string reads the same forward and backward, it is a palindrome.
+ 
+
+Constraints:
+
+* 1 <= s.length <= 2 * 105
+* s consists only of printable ASCII characters.
+"""
+
+def isPalindrome(self, s: str) -> bool:
+    # two pointers
+    i, j = 0, len(s)-1
+    while i <= j:
+        if not s[i].isalnum():
+            i += 1
+        elif not s[j].isalnum():
+            j -= 1
+        elif s[i].lower() != s[j].lower():
+            return False
+        else:
+            i += 1
+            j -= 1
+    return True
+
+
+"""708. Insert into a Sorted Circular Linked List
+
+Given a Circular Linked List node, which is sorted in ascending order, 
+write a function to insert a value `insertVal` into the list such that 
+it remains a sorted circular list. The given node can be a reference to 
+any single node in the list and may not necessarily be the smallest 
+value in the circular list.
+
+If there are multiple suitable places for insertion, you may choose any 
+place to insert the new value. After the insertion, the circular list 
+should remain sorted.
+
+If the list is empty (i.e., the given node is `null`), you should create 
+a new single circular list and return the reference to that single node. 
+Otherwise, you should return the originally given node.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2019/01/19/example_1_before_65p.jpg)
+
+```
+Input: head = [3,4,1], insertVal = 2
+Output: [3,4,1,2]
+Explanation: In the figure above, there is a sorted circular list of three elements. You are given a reference to the node with value 3, and we need to insert 2 into the list. The new node should be inserted between node 1 and node 3. After the insertion, the list should look like this, and we should still return node 3.
+```
+
+**Example 2:**
+
+```
+Input: head = [], insertVal = 1
+Output: [1]
+Explanation: The list is empty (given head is null). We create a new single circular list and return the reference to that single node.
+```
+
+**Example 3:**
+
+```
+Input: head = [1], insertVal = 0
+Output: [1,0]
+```
+ 
+
+**Constraints:**
+
+- The number of nodes in the list is in the range `[0, 5 * 104]`.
+- `-106 <= Node.val, insertVal <= 106`
+"""
+
+def insert(self, head: 'Optional[Node]', insertVal: int) -> 'Node':
+    if not head:
+        node = Node(insertVal)
+        node.next = node
+        return node
+    
+    def _insert(cur, insertVal):
+        node = Node(insertVal)
+        node.next = cur.next
+        cur.next = node
+    
+    cur = head
+    while True:
+        if cur.val <= cur.next.val:
+            if cur.val <= insertVal <= cur.next.val:
+                _insert(cur, insertVal)
+                return head
+        # find the edge of max -> min or we alredy visited all nodes
+        # which indicates all numbers in list are the same but doesn't
+        # equal to `insertVal`
+        if cur.val > cur.next.val or cur.next == head:
+            if insertVal <= cur.next.val or insertVal >= cur.val:
+                _insert(cur, insertVal)
+                return head
+        cur = cur.next
+
+
+"""2259. Remove Digit From Number to Maximize Result
+
+You are given a string number representing a positive integer and a character digit.
+
+Return the resulting string after removing exactly one occurrence of 
+digit from number such that the value of the resulting string in decimal 
+form is maximized. The test cases are generated such that digit occurs 
+at least once in number.
+
+ 
+Example 1:
+
+Input: number = "123", digit = "3"
+Output: "12"
+Explanation: There is only one '3' in "123". After removing '3', the result is "12".
+Example 2:
+
+Input: number = "1231", digit = "1"
+Output: "231"
+Explanation: We can remove the first '1' to get "231" or remove the second '1' to get "123".
+Since 231 > 123, we return "231".
+Example 3:
+
+Input: number = "551", digit = "5"
+Output: "51"
+Explanation: We can remove either the first or second '5' from "551".
+Both result in the string "51".
+ 
+
+Constraints:
+
+* 2 <= number.length <= 100
+* number consists of digits from '1' to '9'.
+* digit is a digit from '1' to '9'.
+* digit occurs at least once in number.
+"""
+
+def removeDigit(self, number: str, digit: str) -> str:
+    removed = []
+    flag = False
+    last = max(i for i, num in enumerate(number) if num == digit)
+    for i, num in enumerate(number):
+        if num != digit:
+            removed.append(num)
+        else:
+            if not flag and (i == last or num < number[i+1]):
+                flag = True
+            else:
+                removed.append(num)            
+        
+    return ''.join(removed)
+
+
+"""2260. Minimum Consecutive Cards to Pick Up
+
+You are given an integer array cards where cards[i] represents the value
+of the ith card. A pair of cards are matching if the cards have the same 
+value.
+
+Return the minimum number of consecutive cards you have to pick up to 
+have a pair of matching cards among the picked cards. If it is impossible 
+to have matching cards, return -1.
+ 
+
+Example 1:
+
+Input: cards = [3,4,2,3,4,7]
+Output: 4
+Explanation: We can pick up the cards [3,4,2,3] which contain a matching pair of cards with value 3. Note that picking up the cards [4,2,3,4] is also optimal.
+Example 2:
+
+Input: cards = [1,0,5,3]
+Output: -1
+Explanation: There is no way to pick up a set of consecutive cards that contain a pair of matching cards.
+ 
+
+Constraints:
+
+* 1 <= cards.length <= 105
+* 0 <= cards[i] <= 106
+"""
+
+def minimumCardPickup(self, cards: List[int]) -> int:
+    val2idx = {}
+    min_size = len(cards) + 1
+    for i, card in enumerate(cards):
+        if card in val2idx:
+            min_size = min(min_size, i - val2idx[card] + 1)
+        val2idx[card] = i
+    return min_size if min_size != len(cards) + 1 else -1
+
+
+"""2261. K Divisible Elements Subarrays
+
+Given an integer array nums and two integers k and p, return the number 
+of distinct subarrays which have at most k elements divisible by p.
+
+Two arrays nums1 and nums2 are said to be distinct if:
+
+They are of different lengths, or
+There exists at least one index i where nums1[i] != nums2[i].
+A subarray is defined as a non-empty contiguous sequence of elements in an array.
+ 
+
+Example 1:
+
+Input: nums = [2,3,3,2,2], k = 2, p = 2
+Output: 11
+Explanation:
+The elements at indices 0, 3, and 4 are divisible by p = 2.
+The 11 distinct subarrays which have at most k = 2 elements divisible by 2 are:
+[2], [2,3], [2,3,3], [2,3,3,2], [3], [3,3], [3,3,2], [3,3,2,2], [3,2], [3,2,2], and [2,2].
+Note that the subarrays [2] and [3] occur more than once in nums, but they should each be counted only once.
+The subarray [2,3,3,2,2] should not be counted because it has 3 elements that are divisible by 2.
+Example 2:
+
+Input: nums = [1,2,3,4], k = 4, p = 1
+Output: 10
+Explanation:
+All element of nums are divisible by p = 1.
+Also, every subarray of nums will have at most 4 elements that are divisible by 1.
+Since all subarrays are distinct, the total number of subarrays satisfying all the constraints is 10.
+ 
+
+Constraints:
+
+* 1 <= nums.length <= 200
+* 1 <= nums[i], p <= 200
+* 1 <= k <= nums.length
+"""
+
+def countDistinct(self, nums: List[int], k: int, p: int) -> int:
+    # hash
+    # O(N^2)
+    visited = set()
+    count = 0
+    
+    for i in range(len(nums)):
+        hash_value = 0
+        cur_k = 0
+        for j in range(i, len(nums)):
+            if nums[j] % p == 0:
+                cur_k += 1
+            if cur_k > k:
+                break
+            # need to pick 201 as the max of nums could be 200
+            hash_value = hash_value * 201 + nums[j]
+            if hash_value not in visited:
+                count += 1
+                visited.add(hash_value)
+    return count
+
+
+"""2262. Total Appeal of A String
+
+The appeal of a string is the number of distinct characters found in the string.
+
+For example, the appeal of "abbca" is 3 because it has 3 distinct 
+characters: 'a', 'b', and 'c'.
+
+Given a string s, return the total appeal of all of its substrings.
+
+A substring is a contiguous sequence of characters within a string.
+ 
+
+Example 1:
+
+Input: s = "abbca"
+Output: 28
+Explanation: The following are the substrings of "abbca":
+- Substrings of length 1: "a", "b", "b", "c", "a" have an appeal of 1, 1, 1, 1, and 1 respectively. The sum is 5.
+- Substrings of length 2: "ab", "bb", "bc", "ca" have an appeal of 2, 1, 2, and 2 respectively. The sum is 7.
+- Substrings of length 3: "abb", "bbc", "bca" have an appeal of 2, 2, and 3 respectively. The sum is 7.
+- Substrings of length 4: "abbc", "bbca" have an appeal of 3 and 3 respectively. The sum is 6.
+- Substrings of length 5: "abbca" has an appeal of 3. The sum is 3.
+The total sum is 5 + 7 + 7 + 6 + 3 = 28.
+Example 2:
+
+Input: s = "code"
+Output: 20
+Explanation: The following are the substrings of "code":
+- Substrings of length 1: "c", "o", "d", "e" have an appeal of 1, 1, 1, and 1 respectively. The sum is 4.
+- Substrings of length 2: "co", "od", "de" have an appeal of 2, 2, and 2 respectively. The sum is 6.
+- Substrings of length 3: "cod", "ode" have an appeal of 3 and 3 respectively. The sum is 6.
+- Substrings of length 4: "code" has an appeal of 4. The sum is 4.
+The total sum is 4 + 6 + 6 + 4 = 20.
+ 
+
+Constraints:
+
+* 1 <= s.length <= 105
+* s consists of lowercase English letters.
+"""
+
+def appealSum(self, s: str) -> int:
+    # dp
+    # f(i): appeal for all substr end at i
+    # f(i) = f(i-1) + (i - last_index[s[i]])
+    
+    last_index = defaultdict(lambda: -1)
+    last_appeal = total_appeal = 0
+    for i, char in enumerate(s):
+        last_appeal += i - last_index[char]
+        total_appeal += last_appeal
+        last_index[char] = i
+    
+    return total_appeal
+
+
 """2273. Find Resultant Array After Removing Anagrams
 
 You are given a 0-indexed string array words, where words[i] consists of 
