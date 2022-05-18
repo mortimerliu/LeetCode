@@ -54,6 +54,79 @@ def isPalindrome(self, s: str) -> bool:
     return True
 
 
+"""## 498. Diagonal Traverse
+
+Given an `m x n` matrix `mat`, return *an array of all the elements of 
+the array in a diagonal order*.
+
+ 
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/04/10/diag1-grid.jpg)
+
+```
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,4,7,5,3,6,8,9]
+```
+
+**Example 2:**
+
+```
+Input: mat = [[1,2],[3,4]]
+Output: [1,2,3,4]
+```
+
+ 
+**Constraints:**
+
+- `m == mat.length`
+- `n == mat[i].length`
+- `1 <= m, n <= 104`
+- `1 <= m * n <= 104`
+- `-105 <= mat[i][j] <= 105`
+"""
+
+def findDiagonalOrder(mat: List[List[int]]) -> List[int]:
+    # m+n-1 diagonals, for k-th (0-indexed) diagonal, i + j = k
+    # if k % 2 == 0: i from m-1 to 0
+    # if k % 2 == 1: i from 0 to m-1
+    # make sure 0 <= j < n
+    
+    m, n = len(mat), len(mat[0])
+    array = []
+    
+    # for k in range(m+n):
+    #     it = range(m) if k % 2 else range(m-1, -1, -1)
+    #     for i in it:
+    #         if 0 <= k-i < n:
+    #             array.append(mat[i][k-i])
+    # return array
+    
+    # cannot simply loop as above as it will waste a lot of time
+    # do the checking, especailly for matrix with shape like
+    # (40000, 1) for example. True time compexity for above is
+    # O((m+n)*n)
+    # need to only traverse O(m*n)
+    
+    for k in range(m+n):
+        if k % 2:
+            i = max(0, k-n+1)
+            j = k - i
+            while i < m and j > -1:
+                array.append(mat[i][j])
+                i += 1
+                j -= 1
+        else:
+            j = max(0, k-m+1)
+            i = k - j
+            while i > -1 and j < n:
+                array.append(mat[i][j])
+                i -= 1
+                j += 1
+    
+    return array
+
+
 """708. Insert into a Sorted Circular Linked List
 
 Given a Circular Linked List node, which is sorted in ascending order, 
