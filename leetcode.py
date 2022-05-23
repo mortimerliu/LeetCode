@@ -1,8 +1,103 @@
 import bisect
+from functools import lru_cache
 from itertools import accumulate
 from operator import itemgetter
 from collections import Counter, defaultdict
 from typing import List, Optional
+
+
+"""65. Valid Number
+
+A **valid number** can be split up into these components (in order):
+
+1. A **decimal number** or an **integer**.
+2. (Optional) An `'e'` or `'E'`, followed by an **integer**.
+
+A **decimal number** can be split up into these components (in order):
+
+1. (Optional) A sign character (either `'+'` or `'-'`).
+2. One of the following formats:
+   1. One or more digits, followed by a dot `'.'`.
+   2. One or more digits, followed by a dot `'.'`, followed by one or more digits.
+   3. A dot `'.'`, followed by one or more digits.
+
+An **integer** can be split up into these components (in order):
+
+1. (Optional) A sign character (either `'+'` or `'-'`).
+2. One or more digits.
+
+For example, all the following are valid numbers: `["2", "0089", "-0.1", 
+"+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", 
+"-123.456e789"]`, while the following are not valid numbers: `["abc", 
+"1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53"]`.
+
+Given a string `s`, return `true` *if* `s` *is a **valid number***.
+
+
+**Example 1:**
+
+```
+Input: s = "0"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: s = "e"
+Output: false
+```
+
+**Example 3:**
+
+```
+Input: s = "."
+Output: false
+```
+ 
+
+**Constraints:**
+
+- `1 <= s.length <= 20`
+- `s` consists of only English letters (both uppercase and lowercase), digits (`0-9`), plus `'+'`, minus `'-'`, or dot `'.'`.
+"""
+
+def isNumber(s: str) -> bool:
+    # Deterministic Finite Automation (DFA)
+    # 8 states, depends on whether see digits, dot, exponent so far
+    # state 1, 4, 7 are valid
+    # 1: 124
+    # 4: 123.34
+    # 7: 123.34E12
+    # 0: digit; 1: sign; 2: dot; 3: exponent
+    dfa = [
+        {0: 1, 1: 3, 2: 2},
+        {0: 1, 3: 5, 2: 4},
+        {0: 4},
+        {2: 2, 0: 1},
+        {0: 4, 3: 5},
+        {0: 7, 1: 6},
+        {0: 7},
+        {0: 7},
+    ]
+    
+    cur_state = 0
+    for c in s:
+        if c.isdigit():
+            grp = 0
+        elif c in ('+', '-'):
+            grp = 1
+        elif c == '.':
+            grp = 2
+        elif c in ('E', 'e'):
+            grp = 3
+        else:
+            return False
+        if grp not in dfa[cur_state]:
+            return False
+        cur_state = dfa[cur_state][grp]
+        
+    return cur_state in (1, 4, 7)
 
 
 """125. Valid Palindrome
@@ -53,6 +148,55 @@ def isPalindrome(self, s: str) -> bool:
             i += 1
             j -= 1
     return True
+
+
+"""346. Moving Average from Data Stream
+
+Given a stream of integers and a window size, calculate the moving 
+average of all integers in the sliding window.
+
+Implement the MovingAverage class:
+
+* MovingAverage(int size) Initializes the object with the size of the window size.
+* double next(int val) Returns the moving average of the last size values of the stream.
+ 
+
+Example 1:
+
+Input
+["MovingAverage", "next", "next", "next", "next"]
+[[3], [1], [10], [3], [5]]
+Output
+[null, 1.0, 5.5, 4.66667, 6.0]
+
+Explanation
+MovingAverage movingAverage = new MovingAverage(3);
+movingAverage.next(1); // return 1.0 = 1 / 1
+movingAverage.next(10); // return 5.5 = (1 + 10) / 2
+movingAverage.next(3); // return 4.66667 = (1 + 10 + 3) / 3
+movingAverage.next(5); // return 6.0 = (10 + 3 + 5) / 3
+ 
+
+Constraints:
+
+* 1 <= size <= 1000
+* -105 <= val <= 105
+* At most 104 calls will be made to next.
+"""
+
+class MovingAverage:
+
+    def __init__(self, size: int):
+        self.deque = deque([])
+        self.total = 0
+        self.size = size
+
+    def next(self, val: int) -> float:
+        if len(self.deque) == self.size:
+            self.total -= self.deque.popleft()
+        self.total += val
+        self.deque.append(val)
+        return self.total / len(self.deque)
 
 
 """## 498. Diagonal Traverse
@@ -204,7 +348,7 @@ def insert(self, head: 'Optional[Node]', insertVal: int) -> 'Node':
         cur = cur.next
 
 
-"""## 791. Custom Sort String
+"""791. Custom Sort String
 
 You are given two strings order and s. All the words of `order` are 
 **unique** and were sorted in some custom order previously.
@@ -257,6 +401,275 @@ def customSortString(self, order: str, s: str) -> str:
         ordered.append(c*freqs[c])
         
     return ''.join(ordered)
+
+
+"""1411. Number of Ways to Paint N × 3 Grid
+
+You have a `grid` of size `n x 3` and you want to paint each cell of the 
+grid with exactly one of the three colors: **Red**, **Yellow,** or 
+**Green** while making sure that no two adjacent cells have the same 
+color (i.e., no two cells that share vertical or horizontal sides have 
+the same color).
+
+Given `n` the number of rows of the grid, return *the number of ways* 
+you can paint this `grid`. As the answer may grow large, the answer 
+**must be** computed modulo `10^9 + 7`.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2020/03/26/e1.png)
+
+```
+Input: n = 1
+Output: 12
+Explanation: There are 12 possible way to paint the grid as shown.
+```
+
+**Example 2:**
+
+```
+Input: n = 5000
+Output: 30228214
+```
+
+
+**Constraints:**
+
+- `n == grid.length`
+- `1 <= n <= 5000`
+"""
+
+def numOfWays(n: int) -> int:
+    '''
+    DP - Bottom up w/ space optimized
+    
+    Observation: for a given row, the pattern of the colors could only
+    be either `aba` or `abc`, and the number of ways for each pattern
+    depends on the pattern of previous row
+    
+    define dp[i]: with a grid of `ix3`, in the (i-1)-th row, there will 
+    be x ways of aba, y ways of abc
+    dp[1]: 6 aba, 6 abc
+    dp[i]: x aba, y abc
+    dp[i+1]: 3x+2y aba, 2x+2y abc
+    '''
+    x = y = 6
+    for i in range(1, n):
+        x, y = 3*x + 2*y, 2*x + 2*y
+    return (x + y) % 1000000007
+    
+
+"""1891. Cutting Ribbons
+
+You are given an integer array `ribbons`, where `ribbons[i]` represents 
+the length of the `ith` ribbon, and an integer `k`. You may cut any of 
+the ribbons into any number of segments of **positive integer** lengths, 
+or perform no cuts at all.
+
+- For example, if you have a ribbon of length `4`, you can:
+  - Keep the ribbon of length `4`,
+  - Cut it into one ribbon of length `3` and one ribbon of length `1`,
+  - Cut it into two ribbons of length `2`,
+  - Cut it into one ribbon of length `2` and two ribbons of length `1`, or
+  - Cut it into four ribbons of length `1`.
+
+Your goal is to obtain `k` ribbons of all the **same positive integer 
+length**. You are allowed to throw away any excess ribbon as a result of 
+cutting.
+
+Return *the **maximum** possible positive integer length that you can 
+obtain* `k` *ribbons of**, or* `0` *if you cannot obtain* `k` *ribbons 
+of the same length*.
+
+
+**Example 1:**
+
+```
+Input: ribbons = [9,7,5], k = 3
+Output: 5
+Explanation:
+- Cut the first ribbon to two ribbons, one of length 5 and one of length 4.
+- Cut the second ribbon to two ribbons, one of length 5 and one of length 2.
+- Keep the third ribbon as it is.
+Now you have 3 ribbons of length 5.
+```
+
+**Example 2:**
+
+```
+Input: ribbons = [7,5,9], k = 4
+Output: 4
+Explanation:
+- Cut the first ribbon to two ribbons, one of length 4 and one of length 3.
+- Cut the second ribbon to two ribbons, one of length 4 and one of length 1.
+- Cut the third ribbon to three ribbons, two of length 4 and one of length 1.
+Now you have 4 ribbons of length 4.
+```
+
+**Example 3:**
+
+```
+Input: ribbons = [5,7,9], k = 22
+Output: 0
+Explanation: You cannot obtain k ribbons of the same positive integer length.
+```
+
+
+**Constraints:**
+
+- `1 <= ribbons.length <= 105`
+- `1 <= ribbons[i] <= 105`
+- `1 <= k <= 109`
+"""
+
+def maxLength(ribbons: List[int], k: int) -> int:
+    # binary search O(NlogN)
+    
+    total = sum(ribbons)
+    if k > total:
+        return 0
+    
+    # optimize the upper bound
+    lo, hi = 1, min(total // k, max(ribbons))
+    
+    while lo < hi:
+        mid = (lo + hi + 1) // 2
+        if sum(x // mid for x in ribbons) >= k:
+            lo = mid
+        else:
+            hi = mid - 1
+    
+    return lo
+
+
+"""2060. Check if an Original String Exists Given Two Encoded Strings
+
+An original string, consisting of lowercase English letters, can be 
+encoded by the following steps:
+
+- Arbitrarily **split** it into a **sequence** of some number of 
+  **non-empty** substrings.
+- Arbitrarily choose some elements (possibly none) of the sequence, 
+  and **replace** each with **its length** (as a numeric string).
+- **Concatenate** the sequence as the encoded string.
+
+For example, **one way** to encode an original string 
+`"abcdefghijklmnop"` might be:
+
+- Split it as a sequence: `["ab", "cdefghijklmn", "o", "p"]`.
+- Choose the second and third elements to be replaced by their lengths, 
+  respectively. The sequence becomes `["ab", "12", "1", "p"]`.
+- Concatenate the elements of the sequence to get the encoded string: 
+  `"ab121p"`.
+
+Given two encoded strings `s1` and `s2`, consisting of lowercase English 
+letters and digits `1-9` (inclusive), return `true` *if there exists an 
+original string that could be encoded as **both*** `s1` *and* `s2`*. 
+Otherwise, return* `false`.
+
+**Note**: The test cases are generated such that the number of 
+consecutive digits in `s1` and `s2` does not exceed `3`.
+
+
+**Example 1:**
+
+```
+Input: s1 = "internationalization", s2 = "i18n"
+Output: true
+Explanation: It is possible that "internationalization" was the original string.
+- "internationalization" 
+  -> Split:       ["internationalization"]
+  -> Do not replace any element
+  -> Concatenate:  "internationalization", which is s1.
+- "internationalization"
+  -> Split:       ["i", "nternationalizatio", "n"]
+  -> Replace:     ["i", "18",                 "n"]
+  -> Concatenate:  "i18n", which is s2
+```
+
+**Example 2:**
+
+```
+Input: s1 = "l123e", s2 = "44"
+Output: true
+Explanation: It is possible that "leetcode" was the original string.
+- "leetcode" 
+  -> Split:      ["l", "e", "et", "cod", "e"]
+  -> Replace:    ["l", "1", "2",  "3",   "e"]
+  -> Concatenate: "l123e", which is s1.
+- "leetcode" 
+  -> Split:      ["leet", "code"]
+  -> Replace:    ["4",    "4"]
+  -> Concatenate: "44", which is s2.
+```
+
+**Example 3:**
+
+```
+Input: s1 = "a5b", s2 = "c5b"
+Output: false
+Explanation: It is impossible.
+- The original string encoded as s1 must start with the letter 'a'.
+- The original string encoded as s2 must start with the letter 'c'.
+```
+
+
+**Constraints:**
+
+- `1 <= s1.length, s2.length <= 40`
+- `s1` and `s2` consist of digits `1-9` (inclusive), and lowercase English letters only.
+- The number of consecutive digits in `s1` and `s2` does not exceed `3`.
+"""
+
+def possiblyEquals(self, s1: str, s2: str) -> bool:
+    m, n = len(s1), len(s2)
+    
+    def gg(s): 
+        ans = {int(s)}
+        for i in range(1, len(s)): 
+            ans |= {x+y for x in gg(s[:i]) for y in gg(s[i:])}
+        return ans
+    
+    @lru_cache(maxsize=None)
+    def dfs(i, j, diff):
+        if i == m and j == n:
+            return diff == 0
+        # if either i or j points to digit, move the pointer
+        # and update the diff
+        elif i < m and s1[i].isdigit():
+            ni = i
+            while ni < m and s1[ni].isdigit():
+                ni += 1
+            for offset in gg(s1[i:ni]):
+                if dfs(ni, j, diff-offset):
+                    return True
+        elif j < n and s2[j].isdigit():
+            nj = j
+            while nj < n and s2[nj].isdigit():
+                nj += 1
+            for offset in gg(s2[j:nj]):
+                if dfs(i, nj, diff+offset):
+                    return True
+        # at this point, i and j must be both letter
+        # or at the end (but not both)
+        
+        # diff is 0, and both i, j points to letter
+        # so they must match
+        elif diff == 0:
+            if i < m and j < n and s1[i] == s2[j]:
+                return dfs(i+1, j+1, diff)
+        # diff != 0, then we can take one diff to match a letter
+        elif diff > 0:
+            if i < m:
+                return dfs(i+1, j, diff-1)
+        else:
+            if j < n:
+                return dfs(i, j+1, diff+1)
+        
+        return False
+    
+    return dfs(0, 0, 0)
     
 
 """2259. Remove Digit From Number to Maximize Result
@@ -752,7 +1165,7 @@ def hasValidPath(self, grid: List[List[str]]) -> bool:
             for pre_cnt in left:
                 if 0 <= pre_cnt+cur <= m+n-i-j-2:
                     dp[i][j].add(pre_cnt+cur)
-    
+
     return 0 in dp[-1][-1]
 
 
