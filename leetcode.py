@@ -1,4 +1,5 @@
 import bisect
+from itertools import accumulate
 from operator import itemgetter
 from collections import Counter, defaultdict
 from typing import List
@@ -686,3 +687,322 @@ class CountIntervals:
          
     def count(self) -> int:
         return self.cnt
+    
+    
+"""2278. Percentage of Letter in String
+
+Given a string `s` and a character `letter`, return *the **percentage** 
+of characters in* `s` *that equal* `letter` ***rounded down** to the 
+nearest whole percent.*
+
+
+**Example 1:**
+
+```
+Input: s = "foobar", letter = "o"
+Output: 33
+Explanation:
+The percentage of characters in s that equal the letter 'o' is 2 / 6 * 100% = 33% when rounded down, so we return 33.
+```
+
+**Example 2:**
+
+```
+Input: s = "jjjj", letter = "k"
+Output: 0
+Explanation:
+The percentage of characters in s that equal the letter 'k' is 0%, so we return 0.
+```
+
+
+**Constraints:**
+
+- `1 <= s.length <= 100`
+- `s` consists of lowercase English letters.
+- `letter` is a lowercase English letter.
+"""
+
+def percentageLetter(s: str, letter: str) -> int:
+    return int(len([c for c in s if c == letter]) / len(s) * 100)
+
+
+"""2279. Maximum Bags With Full Capacity of Rocks
+
+You have `n` bags numbered from `0` to `n - 1`. You are given two 
+**0-indexed** integer arrays `capacity` and `rocks`. The `ith` bag can 
+hold a maximum of `capacity[i]` rocks and currently contains `rocks[i]` 
+rocks. You are also given an integer `additionalRocks`, the number of 
+additional rocks you can place in **any** of the bags.
+
+Return *the **maximum** number of bags that could have full capacity 
+after placing the additional rocks in some bags.*
+
+
+**Example 1:**
+
+```
+Input: capacity = [2,3,4,5], rocks = [1,2,4,4], additionalRocks = 2
+Output: 3
+Explanation:
+Place 1 rock in bag 0 and 1 rock in bag 1.
+The number of rocks in each bag are now [2,3,4,4].
+Bags 0, 1, and 2 have full capacity.
+There are 3 bags at full capacity, so we return 3.
+It can be shown that it is not possible to have more than 3 bags at full capacity.
+Note that there may be other ways of placing the rocks that result in an answer of 3.
+```
+
+**Example 2:**
+
+```
+Input: capacity = [10,2,2], rocks = [2,2,0], additionalRocks = 100
+Output: 3
+Explanation:
+Place 8 rocks in bag 0 and 2 rocks in bag 2.
+The number of rocks in each bag are now [10,2,2].
+Bags 0, 1, and 2 have full capacity.
+There are 3 bags at full capacity, so we return 3.
+It can be shown that it is not possible to have more than 3 bags at full capacity.
+Note that we did not use all of the additional rocks.
+```
+
+
+**Constraints:**
+
+- `n == capacity.length == rocks.length`
+- `1 <= n <= 5 * 104`
+- `1 <= capacity[i] <= 109`
+- `0 <= rocks[i] <= capacity[i]`
+- `1 <= additionalRocks <= 109`
+"""
+
+def maximumBags(
+    capacity: List[int], 
+    rocks: List[int], 
+    additionalRocks: int
+) -> int:
+    remains = [c-r for c, r in zip(capacity, rocks)]
+    remains.sort()
+    
+    num_full = 0
+    for i in range(len(capacity)):
+        if remains[i] == 0:
+            num_full += 1
+        elif remains[i] <= additionalRocks:
+            additionalRocks -= remains[i]
+            num_full += 1
+        else:
+            break
+    
+    return num_full
+
+
+"""2280. Minimum Lines to Represent a Line Chart
+
+You are given a 2D integer array `stockPrices` where `stockPrices[i] = 
+[dayi, pricei]` indicates the price of the stock on day `dayi` is 
+`pricei`. A **line chart** is created from the array by plotting the 
+points on an XY plane with the X-axis representing the day and the 
+Y-axis representing the price and connecting adjacent points. One such 
+example is shown below:
+
+![img](https://assets.leetcode.com/uploads/2022/03/30/1920px-pushkin_population_historysvg.png)
+
+Return *the **minimum number of lines** needed to represent the line chart*.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/30/ex0.png)
+
+```
+Input: stockPrices = [[1,7],[2,6],[3,5],[4,4],[5,4],[6,3],[7,2],[8,1]]
+Output: 3
+Explanation:
+The diagram above represents the input, with the X-axis representing the day and Y-axis representing the price.
+The following 3 lines can be drawn to represent the line chart:
+- Line 1 (in red) from (1,7) to (4,4) passing through (1,7), (2,6), (3,5), and (4,4).
+- Line 2 (in blue) from (4,4) to (5,4).
+- Line 3 (in green) from (5,4) to (8,1) passing through (5,4), (6,3), (7,2), and (8,1).
+It can be shown that it is not possible to represent the line chart using less than 3 lines.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/30/ex1.png)
+
+```
+Input: stockPrices = [[3,4],[1,2],[7,8],[2,3]]
+Output: 1
+Explanation:
+As shown in the diagram above, the line chart can be represented with a single line.
+```
+
+
+**Constraints:**
+
+- `1 <= stockPrices.length <= 105`
+- `stockPrices[i].length == 2`
+- `1 <= dayi, pricei <= 109`
+- All `dayi` are **distinct**.
+"""
+
+def minimumLines(stockPrices: List[List[int]]) -> int:  # type: ignore
+    """Greatest Common Divisor"""
+    stockPrices.sort()
+    n = len(stockPrices)
+    if n==0 or n==1: return 0
+    
+    ans = n - 1
+    for i in range(2, n):
+        # check if the slope is same as prev
+        # if yes, num of lines can be reduced by 1
+        # to deal with the floating precision issue,
+        # use greatest common divider
+        x1, y1 = stockPrices[i-2]
+        x2, y2 = stockPrices[i-1]
+        x3, y3 = stockPrices[i]
+        dx1, dy1 = x2-x1, y2-y1
+        dx2, dy2 = x3-x2, y3-y2
+        gcd1 = gcd(dx1, dy1)
+        dx1, dy1 = dx1 / gcd1, dy1 / gcd1
+        gcd2 = gcd(dx2, dy2)
+        dx2, dy2 = dx2 / gcd2, dy2 / gcd2
+        if dx1 == dx2 and dy1 == dy2: ans -= 1
+        
+    return ans
+
+def minimumLines(stockPrices: List[List[int]]) -> int:
+    """Cross multiplication"""
+    stockPrices.sort()
+    n = len(stockPrices)
+    if n==0 or n==1: return 0
+    
+    ans = n - 1
+    for i in range(2, n):
+        # y1 / x1 == y2 / x2
+        # <==> y1 *x2 = x1 * y2
+        y1 = stockPrices[i][1] - stockPrices[i-1][1]
+        x1 = stockPrices[i][0] - stockPrices[i-1][0]
+        y2 = stockPrices[i-1][1] - stockPrices[i-2][1]
+        x2 = stockPrices[i-1][0] - stockPrices[i-2][0]
+        
+        if y1 * x2 == y2 * x1:
+            ans -= 1
+        
+    return ans
+
+
+"""2281. Sum of Total Strength of Wizards
+
+As the ruler of a kingdom, you have an army of wizards at your command.
+
+You are given a **0-indexed** integer array `strength`, where 
+`strength[i]` denotes the strength of the `ith` wizard. For a 
+**contiguous** group of wizards (i.e. the wizards' strengths form a 
+**subarray** of `strength`), the **total strength** is defined as the 
+**product** of the following two values:
+
+- The strength of the **weakest** wizard in the group.
+- The **total** of all the individual strengths of the wizards in the group.
+
+Return *the **sum** of the total strengths of **all** contiguous groups 
+of wizards*. Since the answer may be very large, return it **modulo** 
+`109 + 7`.
+
+A **subarray** is a contiguous **non-empty** sequence of elements 
+within an array.
+
+
+**Example 1:**
+
+```
+Input: strength = [1,3,1,2]
+Output: 44
+Explanation: The following are all the contiguous groups of wizards:
+- [1] from [1,3,1,2] has a total strength of min([1]) * sum([1]) = 1 * 1 = 1
+- [3] from [1,3,1,2] has a total strength of min([3]) * sum([3]) = 3 * 3 = 9
+- [1] from [1,3,1,2] has a total strength of min([1]) * sum([1]) = 1 * 1 = 1
+- [2] from [1,3,1,2] has a total strength of min([2]) * sum([2]) = 2 * 2 = 4
+- [1,3] from [1,3,1,2] has a total strength of min([1,3]) * sum([1,3]) = 1 * 4 = 4
+- [3,1] from [1,3,1,2] has a total strength of min([3,1]) * sum([3,1]) = 1 * 4 = 4
+- [1,2] from [1,3,1,2] has a total strength of min([1,2]) * sum([1,2]) = 1 * 3 = 3
+- [1,3,1] from [1,3,1,2] has a total strength of min([1,3,1]) * sum([1,3,1]) = 1 * 5 = 5
+- [3,1,2] from [1,3,1,2] has a total strength of min([3,1,2]) * sum([3,1,2]) = 1 * 6 = 6
+- [1,3,1,2] from [1,3,1,2] has a total strength of min([1,3,1,2]) * sum([1,3,1,2]) = 1 * 7 = 7
+The sum of all the total strengths is 1 + 9 + 1 + 4 + 4 + 4 + 3 + 5 + 6 + 7 = 44.
+```
+
+**Example 2:**
+
+```
+Input: strength = [5,4,6]
+Output: 213
+Explanation: The following are all the contiguous groups of wizards: 
+- [5] from [5,4,6] has a total strength of min([5]) * sum([5]) = 5 * 5 = 25
+- [4] from [5,4,6] has a total strength of min([4]) * sum([4]) = 4 * 4 = 16
+- [6] from [5,4,6] has a total strength of min([6]) * sum([6]) = 6 * 6 = 36
+- [5,4] from [5,4,6] has a total strength of min([5,4]) * sum([5,4]) = 4 * 9 = 36
+- [4,6] from [5,4,6] has a total strength of min([4,6]) * sum([4,6]) = 4 * 10 = 40
+- [5,4,6] from [5,4,6] has a total strength of min([5,4,6]) * sum([5,4,6]) = 4 * 15 = 60
+The sum of all the total strengths is 25 + 16 + 36 + 36 + 40 + 60 = 213.
+```
+
+
+**Constraints:**
+
+- `1 <= strength.length <= 105`
+- `1 <= strength[i] <= 109`
+"""
+
+def totalStrength(self, s: List[int]) -> int:
+    """
+    Idea is similar to LC84. Largest Rectangle in Histogram. 
+    For each bar (value), find the sum of subarrays where the bar is
+    the minimum value. define l, r as the leftmost, and rightmost index
+    which all values between l and r >= bar (we can use a mono stack
+    to do this)
+    
+    the key part is how to calculate the sum of subarrays given i (index
+    of bar), l, r. the solution is presum of presum
+    
+    define pp(i) = presum of presum
+    
+    example: [1,2,5,3,4,5]
+    for i == 2, the range of subarray is [5,3,4,5]
+    sum of subarrays are:
+        3
+        3 4      = pp(5) - pp(2) - 3 * (1,2,5)
+        3 4 5
+        
+        5 3
+        5 3 4    = pp(5) - pp(2) - 3 * (1,2)
+        5 3 4 5
+        
+        3 * (1,2) + 3 * (1,2,5) = 3 * (pp(2) - pp(stack[-1]-1 or -1)
+    
+    summary:
+    
+    sum of subarrays give i, l, r =
+    (i-l+1) * (pp(r) - pp(i-1)) - (r-i+1) * (pp(l) - pp(stack[-1]-1 or -1))
+    pp(-1) = 0
+                
+    """
+    n = len(s)
+    
+    # presum of presum
+    pp = list(accumulate(accumulate(s), initial=0))  # type: ignore
+    print(pp)
+    stack = []
+    total = 0
+    for cur in range(n+1):
+        cur_num = s[cur] if cur < n else float('-inf')
+        while stack and cur_num <= s[stack[-1]]:
+            i = stack.pop()
+            l = stack[-1]+1 if stack else 0
+            r = cur-1
+            total += (
+                (i-l+1) * (pp[r+1] - pp[i]) - (r-i+1) * (pp[i] - pp[max(l-1,0)])
+            ) * s[i]
+        stack.append(cur)
+    return total % (1000000007)
