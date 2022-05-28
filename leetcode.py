@@ -2,7 +2,7 @@ import bisect
 from itertools import accumulate
 from operator import itemgetter
 from collections import Counter, defaultdict
-from typing import List
+from typing import List, Optional
 
 
 """125. Valid Palindrome
@@ -466,6 +466,294 @@ def appealSum(self, s: str) -> int:
         last_index[char] = i
     
     return total_appeal
+
+
+"""2264. Largest 3-Same-Digit Number in String
+
+You are given a string `num` representing a large integer. An integer is 
+**good** if it meets the following conditions:
+
+- It is a **substring** of `num` with length `3`.
+- It consists of only one unique digit.
+
+Return *the **maximum good** integer as a **string** or an empty string* 
+`""` *if no such integer exists*.
+
+Note:
+
+- A **substring** is a contiguous sequence of characters within a string.
+- There may be **leading zeroes** in `num` or a good integer.
+
+
+**Example 1:**
+
+```
+Input: num = "6777133339"
+Output: "777"
+Explanation: There are two distinct good integers: "777" and "333".
+"777" is the largest, so we return "777".
+```
+
+**Example 2:**
+
+```
+Input: num = "2300019"
+Output: "000"
+Explanation: "000" is the only good integer.
+```
+
+**Example 3:**
+
+```
+Input: num = "42352338"
+Output: ""
+Explanation: No substring of length 3 consists of only one unique digit. Therefore, there are no good integers.
+```
+
+
+**Constraints:**
+
+- `3 <= num.length <= 1000`
+- `num` only consists of digits.
+"""
+
+def largestGoodInteger(num: str) -> str:
+    res = ""
+    for i in range(len(num)-2):
+        if num[i] == num[i+1] == num[i+2]:
+            res = max(res, num[i:i+3])
+    return res
+
+
+"""2265. Count Nodes Equal to Average of Subtree
+
+Given the `root` of a binary tree, return *the number of nodes where the 
+value of the node is equal to the **average** of the values in its 
+**subtree***.
+
+**Note:**
+
+- The **average** of `n` elements is the **sum** of the `n` elements divided by `n` and **rounded down** to the nearest integer.
+- A **subtree** of `root` is a tree consisting of `root` and all of its descendants.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/15/image-20220315203925-1.png)
+
+```
+Input: root = [4,8,5,0,1,null,6]
+Output: 5
+Explanation: 
+For the node with value 4: The average of its subtree is (4 + 8 + 5 + 0 + 1 + 6) / 6 = 24 / 6 = 4.
+For the node with value 5: The average of its subtree is (5 + 6) / 2 = 11 / 2 = 5.
+For the node with value 0: The average of its subtree is 0 / 1 = 0.
+For the node with value 1: The average of its subtree is 1 / 1 = 1.
+For the node with value 6: The average of its subtree is 6 / 1 = 6.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/26/image-20220326133920-1.png)
+
+```
+Input: root = [1]
+Output: 1
+Explanation: For the node with value 1: The average of its subtree is 1 / 1 = 1.
+```
+
+
+**Constraints:**
+
+- The number of nodes in the tree is in the range `[1, 1000]`.
+- `0 <= Node.val <= 1000`
+"""
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def averageOfSubtree(root: Optional[TreeNode]) -> int:
+    
+    count = 0
+    def dfs(node):
+        nonlocal count
+        if node is None: return (0, 0)
+        left_sum, left_cnt = dfs(node.left)
+        right_sum, right_cnt = dfs(node.right)
+        total_sum = left_sum + node.val + right_sum
+        total_cnt = left_cnt + 1 + right_cnt
+        if total_sum // total_cnt == node.val:
+            count += 1
+        return (total_sum, total_cnt)
+    
+    dfs(root)
+    return count
+
+
+"""2266. Count Number of Texts
+
+Alice is texting Bob using her phone. The **mapping** of digits to 
+letters is shown in the figure below.
+
+![img](https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg.png)
+
+In order to **add** a letter, Alice has to **press** the key of the 
+corresponding digit `i` times, where `i` is the position of the letter 
+in the key.
+
+- For example, to add the letter `'s'`, Alice has to press `'7'` four times. Similarly, to add the letter `'k'`, Alice has to press `'5'` twice.
+- Note that the digits `'0'` and `'1'` do not map to any letters, so Alice **does not** use them.
+
+However, due to an error in transmission, Bob did not receive Alice's 
+text message but received a **string of pressed keys** instead.
+
+- For example, when Alice sent the message `"bob"`, Bob received the string `"2266622"`.
+
+Given a string `pressedKeys` representing the string received by Bob, 
+return *the **total number of possible text messages** Alice could have 
+sent*.
+
+Since the answer may be very large, return it **modulo** `109 + 7`.
+
+
+**Example 1:**
+
+```
+Input: pressedKeys = "22233"
+Output: 8
+Explanation:
+The possible text messages Alice could have sent are:
+"aaadd", "abdd", "badd", "cdd", "aaae", "abe", "bae", and "ce".
+Since there are 8 possible messages, we return 8.
+```
+
+**Example 2:**
+
+```
+Input: pressedKeys = "222222222222222222222222222222222222"
+Output: 82876089
+Explanation:
+There are 2082876103 possible text messages Alice could have sent.
+Since we need to return the answer modulo 109 + 7, we return 2082876103 % (109 + 7) = 82876089.
+```
+
+
+**Constraints:**
+
+- `1 <= pressedKeys.length <= 105`
+- `pressedKeys` only consists of digits from `'2'` - `'9'`.
+"""
+
+def countTexts(self, pressedKeys: str) -> int:
+    # space can be optimized to O(4) / O(1) as
+    # the dependency is at most 4 (a key can be
+    # at most repeatly pressed 4 times for a char)
+    
+    n = len(pressedKeys)
+    dp = [0] * n
+    
+    for i in range(n):
+        if i == 0:
+            dp[i] = 1
+        else:
+            cur_key = pressedKeys[i]
+            max_press = 4 if cur_key in '79' else 3 
+            for j in range(max_press):
+                start = i - j
+                if start < 0 or pressedKeys[start] != cur_key:
+                    break
+                if start == 0: 
+                    dp[i] += 1
+                else:
+                    dp[i] += dp[start-1]
+    
+    return dp[-1] % 1000000007
+
+
+"""2267. Check if There Is a Valid Parentheses String Path
+
+A parentheses string is a **non-empty** string consisting only of `'('` 
+and `')'`. It is **valid** if **any** of the following conditions is 
+**true**:
+
+- It is `()`.
+- It can be written as `AB` (`A` concatenated with `B`), where `A` and `B` are valid parentheses strings.
+- It can be written as `(A)`, where `A` is a valid parentheses string.
+
+You are given an `m x n` matrix of parentheses `grid`. A **valid 
+parentheses string path** in the grid is a path satisfying **all** of 
+the following conditions:
+
+- The path starts from the upper left cell `(0, 0)`.
+- The path ends at the bottom-right cell `(m - 1, n - 1)`.
+- The path only ever moves **down** or **right**.
+- The resulting parentheses string formed by the path is **valid**.
+
+Return `true` *if there exists a **valid parentheses string path** in 
+the grid.* Otherwise, return `false`.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/15/example1drawio.png)
+
+```
+Input: grid = [["(","(","("],[")","(",")"],["(","(",")"],["(","(",")"]]
+Output: true
+Explanation: The above diagram shows two possible paths that form valid parentheses strings.
+The first path shown results in the valid parentheses string "()(())".
+The second path shown results in the valid parentheses string "((()))".
+Note that there may be other valid parentheses string paths.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/15/example2drawio.png)
+
+```
+Input: grid = [[")",")"],["(","("]]
+Output: false
+Explanation: The two possible paths form the parentheses strings "))(" and ")((". Since neither of them are valid parentheses strings, we return false.
+```
+
+
+**Constraints:**
+
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 100`
+- `grid[i][j]` is either `'('` or `')'`.
+"""
+
+def hasValidPath(self, grid: List[List[str]]) -> bool:
+    # space can be further optimized to O(M) - only the prev row needed
+    if grid[-1][-1] == '(' or grid[0][0] == ')':
+        return False
+    
+    m, n = len(grid), len(grid[0])
+    dp = [[set() for _ in range(n)] for _ in range(m)]
+    dp[0][0].add(1)
+    
+    for i in range(m):
+        for j in range(n):
+            cur = 1 if grid[i][j] == '(' else -1
+            top = dp[i-1][j] if i > 0 else []
+            for pre_cnt in top:
+                # pruning here: if the cnt > m+n-i-j-2,
+                # then there won't be enough cells left
+                # to offset the cnt so that the cnt 
+                # could be 0 at the end
+                if 0 <= pre_cnt+cur <= m+n-i-j-2:
+                    dp[i][j].add(pre_cnt+cur)
+            left = dp[i][j-1] if j > 0 else []
+            for pre_cnt in left:
+                if 0 <= pre_cnt+cur <= m+n-i-j-2:
+                    dp[i][j].add(pre_cnt+cur)
+    
+    return 0 in dp[-1][-1]
 
 
 """2273. Find Resultant Array After Removing Anagrams
