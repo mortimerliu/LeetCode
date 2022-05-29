@@ -2,8 +2,9 @@ import bisect
 from functools import lru_cache
 import heapq
 from itertools import accumulate
+from math import gcd
 from operator import itemgetter
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 from typing import List, Optional
 
 
@@ -200,7 +201,7 @@ class MovingAverage:
         return self.total / len(self.deque)
 
 
-"""## 498. Diagonal Traverse
+"""498. Diagonal Traverse
 
 Given an `m x n` matrix `mat`, return *an array of all the elements of 
 the array in a diagonal order*.
@@ -322,10 +323,15 @@ Output: [1,0]
 - `-106 <= Node.val, insertVal <= 106`
 """
 
+class Node:
+    def __init__(self, val=None, next=None):
+        self.val = val
+        self.next = next
+        
 def insert(self, head: 'Optional[Node]', insertVal: int) -> 'Node':
     if not head:
         node = Node(insertVal)
-        node.next = node
+        node.next = node  # type: ignore
         return node
     
     def _insert(cur, insertVal):
@@ -671,7 +677,7 @@ def possiblyEquals(self, s1: str, s2: str) -> bool:
         return False
     
     return dfs(0, 0, 0)
-    
+
 
 """2259. Remove Digit From Number to Maximize Result
 
@@ -1709,6 +1715,366 @@ def totalStrength(self, s: List[int]) -> int:
         stack.append(cur)
     return total % (1000000007)
 
+
+"""2283. Check if Number Has Equal Digit Count and Digit Value
+
+You are given a **0-indexed** string `num` of length `n` consisting of 
+digits.
+
+Return `true` *if for **every** index* `i` *in the range* `0 <= i < n`*, 
+the digit* `i` *occurs* `num[i]` *times in* `num`*, otherwise return* `false`.
+
+
+**Example 1:**
+
+```
+Input: num = "1210"
+Output: true
+Explanation:
+num[0] = '1'. The digit 0 occurs once in num.
+num[1] = '2'. The digit 1 occurs twice in num.
+num[2] = '1'. The digit 2 occurs once in num.
+num[3] = '0'. The digit 3 occurs zero times in num.
+The condition holds true for every index in "1210", so return true.
+```
+
+**Example 2:**
+
+```
+Input: num = "030"
+Output: false
+Explanation:
+num[0] = '0'. The digit 0 should occur zero times, but actually occurs twice in num.
+num[1] = '3'. The digit 1 should occur three times, but actually occurs zero times in num.
+num[2] = '0'. The digit 2 occurs zero times in num.
+The indices 0 and 1 both violate the condition, so return false.
+```
+
+
+**Constraints:**
+
+- `n == num.length`
+- `1 <= n <= 10`
+- `num` consists of digits.
+"""
+
+def digitCount(num: str) -> bool:
+    counter = Counter(num)
+    for i, c in enumerate(num):
+        if counter[str(i)] != int(c):
+            return False
+    return True
+
+
+"""2284. Sender With Largest Word Count
+
+You have a chat log of `n` messages. You are given two string arrays 
+`messages` and `senders` where `messages[i]` is a **message** sent by 
+`senders[i]`.
+
+A **message** is list of **words** that are separated by a single space 
+with no leading or trailing spaces. The **word count** of a sender is 
+the total number of **words** sent by the sender. Note that a sender may 
+send more than one message.
+
+Return *the sender with the **largest** word count*. If there is more 
+than one sender with the largest word count, return *the one with the 
+**lexicographically largest** name*.
+
+**Note:**
+
+- Uppercase letters come before lowercase letters in lexicographical order.
+- `"Alice"` and `"alice"` are distinct.
+
+
+**Example 1:**
+
+```
+Input: messages = ["Hello userTwooo","Hi userThree","Wonderful day 
+Alice","Nice day userThree"], senders = ["Alice","userTwo","userThree","Alice"]
+Output: "Alice"
+Explanation: Alice sends a total of 2 + 3 = 5 words.
+userTwo sends a total of 2 words.
+userThree sends a total of 3 words.
+Since Alice has the largest word count, we return "Alice".
+```
+
+**Example 2:**
+
+```
+Input: messages = ["How is leetcode for everyone","Leetcode is useful 
+for practice"], senders = ["Bob","Charlie"]
+Output: "Charlie"
+Explanation: Bob sends a total of 5 words.
+Charlie sends a total of 5 words.
+Since there is a tie for the largest word count, we return the sender 
+with the lexicographically larger name, Charlie.
+```
+
+
+**Constraints:**
+
+- `n == messages.length == senders.length`
+- `1 <= n <= 104`
+- `1 <= messages[i].length <= 100`
+- `1 <= senders[i].length <= 10`
+- `messages[i]` consists of uppercase and lowercase English letters and `' '`.
+- All the words in `messages[i]` are separated by **a single space**.
+- `messages[i]` does not have leading or trailing spaces.
+- `senders[i]` consists of uppercase and lowercase English letters only.
+"""
+
+def largestWordCount(messages: List[str], senders: List[str]) -> str:
+    counts = defaultdict(int)
+    for msg, sndr in zip(messages, senders):
+        counts[sndr] += len(msg.split(' '))
+    
+    counts = list(counts.items())
+    counts.sort(key = lambda x: (x[1], x[0]))
+    
+    return counts[-1][0]
+
+
+"""2285. Maximum Total Importance of Roads
+
+You are given an integer `n` denoting the number of cities in a country. 
+The cities are numbered from `0` to `n - 1`.
+
+You are also given a 2D integer array `roads` where `roads[i] = [ai, bi]` 
+denotes that there exists a **bidirectional** road connecting cities `ai` 
+and `bi`.
+
+You need to assign each city with an integer value from `1` to `n`, 
+where each value can only be used **once**. The **importance** of a road 
+is then defined as the **sum** of the values of the two cities it connects.
+
+Return *the **maximum total importance** of all roads possible after 
+assigning the values optimally.*
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/04/07/ex1drawio.png)
+
+```
+Input: n = 5, roads = [[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]
+Output: 43
+Explanation: The figure above shows the country and the assigned values of [2,4,5,3,1].
+- The road (0,1) has an importance of 2 + 4 = 6.
+- The road (1,2) has an importance of 4 + 5 = 9.
+- The road (2,3) has an importance of 5 + 3 = 8.
+- The road (0,2) has an importance of 2 + 5 = 7.
+- The road (1,3) has an importance of 4 + 3 = 7.
+- The road (2,4) has an importance of 5 + 1 = 6.
+The total importance of all roads is 6 + 9 + 8 + 7 + 7 + 6 = 43.
+It can be shown that we cannot obtain a greater total importance than 43.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/04/07/ex2drawio.png)
+
+```
+Input: n = 5, roads = [[0,3],[2,4],[1,3]]
+Output: 20
+Explanation: The figure above shows the country and the assigned values of [4,3,2,5,1].
+- The road (0,3) has an importance of 4 + 5 = 9.
+- The road (2,4) has an importance of 2 + 1 = 3.
+- The road (1,3) has an importance of 3 + 5 = 8.
+The total importance of all roads is 9 + 3 + 8 = 20.
+It can be shown that we cannot obtain a greater total importance than 20.
+```
+
+
+**Constraints:**
+
+- `2 <= n <= 5 * 104`
+- `1 <= roads.length <= 5 * 104`
+- `roads[i].length == 2`
+- `0 <= ai, bi <= n - 1`
+- `ai != bi`
+- There are no duplicate roads.
+"""
+
+def maximumImportance(n: int, roads: List[List[int]]) -> int:
+    indegree = defaultdict(int)
+    for a, b in roads:
+        indegree[a] += 1
+        indegree[b] += 1
+    res = 0
+    for i, (city, cnt) in enumerate(
+        sorted(indegree.items(), key=lambda x: -x[1])
+    ):
+        res += cnt * (n-i)
+    
+    return res
+
+
+"""2286. Booking Concert Tickets in Groups
+
+A concert hall has `n` rows numbered from `0` to `n - 1`, each with `m` 
+seats, numbered from `0` to `m - 1`. You need to design a ticketing 
+system that can allocate seats in the following cases:
+
+- If a group of `k` spectators can sit **together** in a row.
+- If **every** member of a group of `k` spectators can get a seat. They 
+may or **may not** sit together.
+
+Note that the spectators are very picky. Hence:
+
+- They will book seats only if each member of their group can get a seat 
+with row number **less than or equal** to `maxRow`. `maxRow` can 
+**vary** from group to group.
+- In case there are multiple rows to choose from, the row with the 
+**smallest** number is chosen. If there are multiple seats to choose in 
+the same row, the seat with the **smallest** number is chosen.
+
+Implement the `BookMyShow` class:
+
+- `BookMyShow(int n, int m)` Initializes the object with `n` as number 
+of rows and `m` as number of seats per row.
+- `int[] gather(int k, int maxRow)` Returns an array of length `2` 
+denoting the row and seat number (respectively) of the **first seat** 
+being allocated to the `k` members of the group, who must sit 
+**together**. In other words, it returns the smallest possible `r` and 
+`c` such that all `[c, c + k - 1]` seats are valid and empty in row `r`, 
+and `r <= maxRow`. Returns `[]` in case it is **not possible** to 
+allocate seats to the group.
+- `boolean scatter(int k, int maxRow)` Returns `true` if all `k` members 
+of the group can be allocated seats in rows `0` to `maxRow`, who may or 
+**may not** sit together. If the seats can be allocated, it allocates `k` 
+seats to the group with the **smallest** row numbers, and the smallest 
+possible seat numbers in each row. Otherwise, returns `false`.
+
+
+**Example 1:**
+
+```
+Input
+["BookMyShow", "gather", "gather", "scatter", "scatter"]
+[[2, 5], [4, 0], [2, 0], [5, 1], [5, 1]]
+Output
+[null, [0, 0], [], true, false]
+
+Explanation
+BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each 
+bms.gather(4, 0); // return [0, 0]
+                  // The group books seats [0, 3] of row 0. 
+bms.gather(2, 0); // return []
+                  // There is only 1 seat left in row 0,
+                  // so it is not possible to book 2 consecutive seats. 
+bms.scatter(5, 1); // return True
+                   // The group books seat 4 of row 0 and seats [0, 3] of row 1. 
+bms.scatter(5, 1); // return False
+                   // There are only 2 seats left in the hall.
+```
+
+
+**Constraints:**
+
+- `1 <= n <= 5 * 104`
+- `1 <= m, k <= 109`
+- `0 <= maxRow <= n - 1`
+- At most `5 * 104` calls **in total** will be made to `gather` and `scatter`.
+"""
+
+class SegmentTree:
+    '''array based implementation'''
+    def __init__(self, n, m):
+        # init is question custimized
+        size = 2 ** (n*2).bit_length()
+        self.tree = [None] * size
+        # Segment Tree 1-index
+        self.build(1, 0, n-1, m)
+        
+    def build(self, pos, rLeft, rRight, m):
+        if rLeft == rRight:
+            self.tree[pos] = [m, m]
+        else:
+            rMid = (rLeft + rRight) // 2
+            self.build(2*pos, rLeft, rMid, m)
+            self.build(2*pos+1, rMid+1, rRight, m)
+            self.tree[pos] = [
+                self.tree[2*pos][0] + self.tree[2*pos+1][0], 
+                max(self.tree[2*pos][1], self.tree[2*pos+1][1])
+            ]
+    
+    def update(self, pos, rLeft, rRight, idx, increVal):
+        if rLeft > idx or rRight < idx:
+            return 
+        elif rLeft == rRight:
+            self.tree[pos][0] += increVal
+            self.tree[pos][1] += increVal
+        else:
+            rMid = (rLeft + rRight) // 2
+            self.update(pos*2, rLeft, rMid, idx, increVal)
+            self.update(pos*2+1, rMid+1, rRight, idx, increVal)
+            self.tree[pos][0] = self.tree[2*pos][0] + self.tree[2*pos+1][0]
+            self.tree[pos][1] = max(self.tree[2*pos][1], self.tree[2*pos+1][1])
+        
+    def query(self, pos, rLeft, rRight, qLeft, qRight):
+        if rLeft > qRight or rRight < qLeft:
+            return [0, 0]
+        elif rLeft >= qLeft and rRight <= qRight:
+            return self.tree[pos]
+        else:
+            rMid = (rLeft + rRight) // 2
+            leftSum, leftMax = self.query(pos*2, rLeft, rMid, qLeft, qRight)
+            rightSum, rightMax = self.query(pos*2+1, rMid+1, rRight, qLeft, qRight)
+            return [leftSum+rightSum, max(leftMax, rightMax)]
+        
+    def querySum(self, pos, rLeft, rRight, qLeft, qRight):
+        return self.query(pos, rLeft, rRight, qLeft, qRight)[0]
+    
+    def queryMax(self, pos, rLeft, rRight, qLeft, qRight):
+        return self.query(pos, rLeft, rRight, qLeft, qRight)[1]
+        
+    def getLowestGreater(self, pos, rLeft, rRight, val):
+        '''return the lowest index in the range [rLeft, rRight]
+        where max of the range [rLeft, index] >= val
+        '''
+        if self.tree[pos][1] < val:
+            return -1
+        while rLeft < rRight:
+            rMid = (rLeft + rRight) // 2
+            if self.tree[pos*2][1] >= val:
+                pos = pos*2
+                rRight = rMid
+            else:
+                pos = pos*2+1
+                rLeft = rMid+1
+        return rLeft
+
+class BookMyShow:
+
+    def __init__(self, n: int, m: int):
+        self.st = SegmentTree(n, m)
+        self.remain = [m] * n
+        self.n = n
+        self.m = m
+        self.first_non_empty_row = 0
+
+    def gather(self, k: int, maxRow: int) -> List[int]:
+        row = self.st.getLowestGreater(1, 0, self.n-1, k)
+        if row == -1 or row > maxRow: return []
+        self.remain[row] -= k
+        self.st.update(1, 0, self.n-1, row, -k)
+        return [row, self.m-self.remain[row]-k]
+        
+    def scatter(self, k: int, maxRow: int) -> bool:
+        if self.first_non_empty_row > maxRow: return False
+        if self.st.querySum(1, 0, self.n-1, self.first_non_empty_row, maxRow) < k:
+            return False
+        i = self.first_non_empty_row
+        while k > 0:
+            booked = min(self.remain[i], k)
+            self.remain[i] -= booked
+            k -= booked
+            self.st.update(1, 0, self.n-1, i, -booked)
+            if self.remain[i] == 0: i += 1
+        self.first_non_empty_row = i
+        return True
+    
 
 """2287. Rearrange Characters to Make Target String
 
