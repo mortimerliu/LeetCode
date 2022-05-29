@@ -1,5 +1,6 @@
 import bisect
 from functools import lru_cache
+import heapq
 from itertools import accumulate
 from operator import itemgetter
 from collections import Counter, defaultdict
@@ -1707,3 +1708,262 @@ def totalStrength(self, s: List[int]) -> int:
             ) * s[i]
         stack.append(cur)
     return total % (1000000007)
+
+
+"""2287. Rearrange Characters to Make Target String
+
+You are given two **0-indexed** strings `s` and `target`. You can take 
+some letters from `s` and rearrange them to form new strings.
+
+Return *the **maximum** number of copies of* `target` *that can be 
+formed by taking letters from* `s` *and rearranging them.*
+
+
+**Example 1:**
+
+```
+Input: s = "ilovecodingonleetcode", target = "code"
+Output: 2
+Explanation:
+For the first copy of "code", take the letters at indices 4, 5, 6, and 7.
+For the second copy of "code", take the letters at indices 17, 18, 19, and 20.
+The strings that are formed are "ecod" and "code" which can both be rearranged into "code".
+We can make at most two copies of "code", so we return 2.
+```
+
+**Example 2:**
+
+```
+Input: s = "abcba", target = "abc"
+Output: 1
+Explanation:
+We can make one copy of "abc" by taking the letters at indices 0, 1, and 2.
+We can make at most one copy of "abc", so we return 1.
+Note that while there is an extra 'a' and 'b' at indices 3 and 4, we cannot reuse the letter 'c' at index 2, so we cannot make a second copy of "abc".
+```
+
+**Example 3:**
+
+```
+Input: s = "abbaccaddaeea", target = "aaaaa"
+Output: 1
+Explanation:
+We can make one copy of "aaaaa" by taking the letters at indices 0, 3, 6, 9, and 12.
+We can make at most one copy of "aaaaa", so we return 1.
+```
+
+
+**Constraints:**
+
+- `1 <= s.length <= 100`
+- `1 <= target.length <= 10`
+- `s` and `target` consist of lowercase English letters.
+"""
+
+def rearrangeCharacters(s: str, target: str) -> int:
+    s_cnt = Counter(s)
+    t_cnt = Counter(target)
+    res = len(s)
+    for tc in t_cnt:
+        res = min(res, s_cnt[tc] // t_cnt[tc])
+    return res
+    
+
+"""2288. Apply Discount to Prices
+
+A **sentence** is a string of single-space separated words where each 
+word can contain digits, lowercase letters, and the dollar sign `'$'`. 
+A word represents a **price** if it is a non-negative real number 
+preceded by a dollar sign.
+
+- For example, `"$100"`, `"$23"`, and `"$6.75"` represent prices while 
+`"100"`, `"$"`, and `"2$3"` do not.
+
+You are given a string `sentence` representing a sentence and an integer 
+`discount`. For each word representing a price, apply a discount of 
+`discount%` on the price and **update** the word in the sentence. All 
+updated prices should be represented with **exactly two** decimal places.
+
+Return *a string representing the modified sentence*.
+
+
+**Example 1:**
+
+```
+Input: sentence = "there are $1 $2 and 5$ candies in the shop", discount = 50
+Output: "there are $0.50 $1.00 and 5$ candies in the shop"
+Explanation: 
+The words which represent prices are "$1" and "$2". 
+- A 50% discount on "$1" yields "$0.50", so "$1" is replaced by "$0.50".
+- A 50% discount on "$2" yields "$1". Since we need to have exactly 2 decimal places after a price, we replace "$2" with "$1.00".
+```
+
+**Example 2:**
+
+```
+Input: sentence = "1 2 $3 4 $5 $6 7 8$ $9 $10$", discount = 100
+Output: "1 2 $0.00 4 $0.00 $0.00 7 8$ $0.00 $10$"
+Explanation: 
+Applying a 100% discount on any price will result in 0.
+The words representing prices are "$3", "$5", "$6", and "$9".
+Each of them is replaced by "$0.00".
+```
+
+
+**Constraints:**
+
+- `1 <= sentence.length <= 105`
+- `sentence` consists of lowercase English letters, digits, `' '`, and `'$'`.
+- `sentence` does not have leading or trailing spaces.
+- All words in `sentence` are separated by a single space.
+- All prices will be **positive** integers without leading zeros.
+- All prices will have **at most** `10` digits.
+- `0 <= discount <= 100`
+"""
+
+def discountPrices(sentence: str, discount: int) -> str:
+    words = sentence.split(' ')
+    updated = []
+    discount = (100 - discount) / 100  # type: ignore
+    
+    for word in words:
+        if word[0]=='$' and word[1:].isnumeric():
+            new_word = '${:.2f}'.format(round(float(word[1:]) * discount, 2))
+        else: 
+            new_word = word
+        updated.append(new_word)
+        
+    return ' '.join(updated)
+
+
+"""2289. Steps to Make Array Non-decreasing
+
+You are given a **0-indexed** integer array `nums`. In one step, 
+**remove** all elements `nums[i]` where `nums[i - 1] > nums[i]` for all 
+`0 < i < nums.length`.
+
+Return *the number of steps performed until* `nums` *becomes a 
+**non-decreasing** array*.
+
+
+**Example 1:**
+
+```
+Input: nums = [5,3,4,4,7,3,6,11,8,5,11]
+Output: 3
+Explanation: The following are the steps performed:
+- Step 1: [5,3,4,4,7,3,6,11,8,5,11] becomes [5,4,4,7,6,11,11]
+- Step 2: [5,4,4,7,6,11,11] becomes [5,4,7,11,11]
+- Step 3: [5,4,7,11,11] becomes [5,7,11,11]
+[5,7,11,11] is a non-decreasing array. Therefore, we return 3.
+```
+
+**Example 2:**
+
+```
+Input: nums = [4,5,7,7,13]
+Output: 0
+Explanation: nums is already a non-decreasing array. Therefore, we return 0.
+```
+
+
+**Constraints:**
+
+- `1 <= nums.length <= 105`
+- `1 <= nums[i] <= 109`
+"""
+
+def totalSteps(nums: List[int]) -> int:
+    '''
+    key observations
+    + need to look at the array from right to left
+    + a number at index `i` need to be remvoed if there is a 
+        number at index `j` on its left (j < i) that > it
+    + use a monotomic stack to track the count of numbers that
+        a number can eat which is the number of steps needed
+    '''
+    res = 0
+    nums.reverse()
+    stack = [(nums[0], 0)]
+    for i in range(1, len(nums)):
+        cnt = 0
+        while stack and stack[-1][0] < nums[i]:
+            # cur number at i can eat the number at top of the stack
+            # need one more step to eat
+            # note that, the number to be eat could also potentially
+            # eat other numbers, and if that takes more steps,
+            # we need to take the maximum
+            cnt = max(cnt+1, stack.pop()[1])
+        stack.append((nums[i], cnt))  # type: ignore
+        res = max(res, cnt)
+    return res
+
+
+"""2290. Minimum Obstacle Removal to Reach Corner
+
+You are given a **0-indexed** 2D integer array `grid` of size `m x n`. 
+Each cell has one of two values:
+
+- `0` represents an **empty** cell,
+- `1` represents an **obstacle** that may be removed.
+
+You can move up, down, left, or right from and to an empty cell.
+
+Return *the **minimum** number of **obstacles** to **remove** so you 
+can move from the upper left corner* `(0, 0)` *to the lower right 
+corner* `(m - 1, n - 1)`.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/04/06/example1drawio-1.png)
+
+```
+Input: grid = [[0,1,1],[1,1,0],[1,1,0]]
+Output: 2
+Explanation: We can remove the obstacles at (0, 1) and (0, 2) to create a path from (0, 0) to (2, 2).
+It can be shown that we need to remove at least 2 obstacles, so we return 2.
+Note that there may be other ways to remove 2 obstacles to create a path.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/04/06/example1drawio.png)
+
+```
+Input: grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]
+Output: 0
+Explanation: We can move from (0, 0) to (2, 4) without removing any obstacles, so we return 0.
+```
+
+
+**Constraints:**
+
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 105`
+- `2 <= m * n <= 105`
+- `grid[i][j]` is either `0` **or** `1`.
+- `grid[0][0] == grid[m - 1][n - 1] == 0`
+"""
+
+def minimumObstacles(grid: List[List[int]]) -> int:
+    m, n = len(grid), len(grid[0])
+    
+    queue = [(0, 0, 0)]
+    #S = set()
+    dist = defaultdict(lambda: m*n)
+    dist[(0,0)] = 0
+    
+    while queue:
+        _, i, j = heapq.heappop(queue)
+        #if (i, j) in S:
+        #    continue
+        #S.add((i, j))
+        for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+            if 0<=ni<m and 0<=nj<n and dist[(ni, nj)] > dist[(i, j)] + grid[ni][nj]:
+                dist[(ni, nj)] = dist[(i, j)] + grid[ni][nj]
+                if (ni, nj) == (m-1, n-1):
+                    return dist[(ni, nj)]
+                heapq.heappush(queue, (dist[(ni, nj)], ni, nj))
+    return -1
