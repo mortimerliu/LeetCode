@@ -152,6 +152,52 @@ def isPalindrome(self, s: str) -> bool:
     return True
 
 
+"""246. Strobogrammatic Number
+
+Given a string `num` which represents an integer, return `true` *if* 
+`num` *is a **strobogrammatic number***.
+
+A **strobogrammatic number** is a number that looks the same when 
+rotated `180` degrees (looked at upside down).
+
+
+**Example 1:**
+
+```
+Input: num = "69"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: num = "88"
+Output: true
+```
+
+**Example 3:**
+
+```
+Input: num = "962"
+Output: false
+```
+
+
+**Constraints:**
+
+- `1 <= num.length <= 50`
+- `num` consists of only digits.
+- `num` does not contain any leading zeros except for zero itself.
+"""
+
+def isStrobogrammatic(num: str) -> bool:
+    n = len(num)
+    for i in range((n+1)//2):
+        if not num[i] + num[n-1-i] in ('00', '11', '88', '69', '96'):
+            return False
+    return True
+
+
 """346. Moving Average from Data Stream
 
 Given a stream of integers and a window size, calculate the moving 
@@ -273,6 +319,50 @@ def findDiagonalOrder(mat: List[List[int]]) -> List[int]:
     
     return array
 
+
+"""539. Minimum Time Difference
+
+Given a list of 24-hour clock time points in **"HH:MM"** format, return 
+*the minimum **minutes** difference between any two time-points in the 
+list*.
+
+
+**Example 1:**
+
+```
+Input: timePoints = ["23:59","00:00"]
+Output: 1
+```
+
+**Example 2:**
+
+```
+Input: timePoints = ["00:00","23:59","00:00"]
+Output: 0
+```
+
+
+**Constraints:**
+
+- `2 <= timePoints.length <= 2 * 104`
+- `timePoints[i]` is in the format **"HH:MM"**.
+"""
+
+def findMinDifference(timePoints: List[str]) -> int:
+    def toMinutes(timePoint):
+        return int(timePoint[:2]) * 60 + int(timePoint[3:])
+    
+    minutes = sorted([toMinutes(tp) for tp in timePoints])
+    min_diff = 60 * 24
+    for i in range(1, len(minutes)):
+        min_diff = min(min_diff, minutes[i] - minutes[i-1])
+        if min_diff == 0:
+            break
+            
+    min_diff = min(min_diff, minutes[0] + 24 * 60 - minutes[-1])
+
+    return min_diff
+    
 
 """708. Insert into a Sorted Circular Linked List
 
@@ -677,6 +767,100 @@ def possiblyEquals(self, s1: str, s2: str) -> bool:
         return False
     
     return dfs(0, 0, 0)
+
+
+"""2096. Step-By-Step Directions From a Binary Tree Node to Another
+
+You are given the `root` of a **binary tree** with `n` nodes. Each node 
+is uniquely assigned a value from `1` to `n`. You are also given an 
+integer `startValue` representing the value of the start node `s`, and 
+a different integer `destValue` representing the value of the 
+destination node `t`.
+
+Find the **shortest path** starting from node `s` and ending at node `t`. 
+Generate step-by-step directions of such path as a string consisting of 
+only the **uppercase** letters `'L'`, `'R'`, and `'U'`. Each letter 
+indicates a specific direction:
+
+- `'L'` means to go from a node to its **left child** node.
+- `'R'` means to go from a node to its **right child** node.
+- `'U'` means to go from a node to its **parent** node.
+
+Return *the step-by-step directions of the **shortest path** from node* 
+`s` *to node* `t`.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/11/15/eg1.png)
+
+```
+Input: root = [5,1,2,3,null,6,4], startValue = 3, destValue = 6
+Output: "UURL"
+Explanation: The shortest path is: 3 → 1 → 5 → 2 → 6.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/11/15/eg2.png)
+
+```
+Input: root = [2,1], startValue = 2, destValue = 1
+Output: "L"
+Explanation: The shortest path is: 2 → 1.
+```
+
+
+**Constraints:**
+
+- The number of nodes in the tree is `n`.
+- `2 <= n <= 105`
+- `1 <= Node.val <= n`
+- All the values in the tree are **unique**.
+- `1 <= startValue, destValue <= n`
+- `startValue != destValue`
+"""
+
+class TreeNode:  # type: ignore
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+class Solution:
+    def getDirections(
+        self, 
+        root: Optional[TreeNode], 
+        startValue: int, 
+        destValue: int
+    ) -> str:
+        
+        part1 = []
+        part2 = []
+        def dfs(node):
+            if not node:
+                return False, False
+            midStart = node.val == startValue
+            midEnd = node.val == destValue
+            
+            leftStart, leftEnd = dfs(node.left)
+            if leftStart and not leftEnd:
+                part1.append('U')
+            elif not leftStart and leftEnd:
+                part2.append('L')
+            rightStart, rightEnd = dfs(node.right)
+            if rightStart and not rightEnd:
+                part1.append('U')
+            elif not rightStart and rightEnd:
+                part2.append('R')
+            
+            start = leftStart | rightStart | midStart
+            end = leftEnd | rightEnd | midEnd
+            
+            return start, end
+        
+        dfs(root)
+        
+        return ''.join(part1 + list(reversed(part2)))
 
 
 """2259. Remove Digit From Number to Maximize Result
