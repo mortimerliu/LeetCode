@@ -6,6 +6,7 @@ from math import gcd
 from operator import itemgetter
 from collections import Counter, defaultdict, deque
 from typing import List, Optional
+from sortedcontainers import SortedList
 
 
 """65. Valid Number
@@ -443,6 +444,129 @@ def insert(self, head: 'Optional[Node]', insertVal: int) -> 'Node':
                 _insert(cur, insertVal)
                 return head
         cur = cur.next
+
+
+"""715. Range Module
+
+A Range Module is a module that tracks ranges of numbers. Design a data 
+structure to track the ranges represented as **half-open intervals** and 
+query about them.
+
+A **half-open interval** `[left, right)` denotes all the real numbers 
+`x` where `left <= x < right`.
+
+Implement the `RangeModule` class:
+
+- `RangeModule()` Initializes the object of the data structure.
+- `void addRange(int left, int right)` Adds the **half-open interval** 
+`[left, right)`, tracking every real number in that interval. Adding an 
+interval that partially overlaps with currently tracked numbers should 
+add any numbers in the interval `[left, right)` that are not already 
+tracked.
+- `boolean queryRange(int left, int right)` Returns `true` if every real 
+number in the interval `[left, right)` is currently being tracked, and 
+`false` otherwise.
+- `void removeRange(int left, int right)` Stops tracking every real 
+number currently being tracked in the **half-open interval** 
+`[left, right)`.
+
+
+**Example 1:**
+
+```
+Input
+["RangeModule", "addRange", "removeRange", "queryRange", "queryRange", "queryRange"]
+[[], [10, 20], [14, 16], [10, 14], [13, 15], [16, 17]]
+Output
+[null, null, null, true, false, true]
+
+Explanation
+RangeModule rangeModule = new RangeModule();
+rangeModule.addRange(10, 20);
+rangeModule.removeRange(14, 16);
+rangeModule.queryRange(10, 14); // return True,(Every number in [10, 14) is being tracked)
+rangeModule.queryRange(13, 15); // return False,(Numbers like 14, 14.03, 14.17 in [13, 15) are not being tracked)
+rangeModule.queryRange(16, 17); // return True, (The number 16 in [16, 17) is still being tracked, despite the remove operation)
+```
+
+
+**Constraints:**
+
+- `1 <= left < right <= 109`
+- At most `104` calls will be made to `addRange`, `queryRange`, and `removeRange`.
+"""
+
+
+class RangeModule:  # type: ignore
+
+    def __init__(self):
+        self.ranges = SortedList()
+
+    def addRange(self, left: int, right: int) -> None:
+        idx = self._findLastSmallerThanOrEqualTo(left)
+        while idx < len(self.ranges) and self.ranges[idx][0] <= right:
+            if self.ranges[idx][1] >= left:
+                left = min(self.ranges[idx][0], left)
+                right = max(self.ranges[idx][1], right)
+                self.ranges.pop(idx)
+            else:
+                idx += 1
+        self.ranges.add([left, right])        
+
+    def queryRange(self, left: int, right: int) -> bool:
+        idx = self._findLastSmallerThanOrEqualTo(left)
+        if idx < len(self.ranges) and self.ranges[idx][0] <= left and self.ranges[idx][1] >= right:
+            return True
+        return False
+
+    def removeRange(self, left: int, right: int) -> None:
+        self.addRange(left, right)
+        idx = self._findLastSmallerThanOrEqualTo(left)
+        start, end = self.ranges[idx]
+        self.ranges.pop(idx)
+        if start < left:
+            self.addRange(start, left)
+        if end > right:
+            self.addRange(right, end)
+        
+    def _findLastSmallerThanOrEqualTo(self, start):
+        left, right = 1, len(self.ranges)
+        while left < right:
+            mid = (left + right) // 2
+            if self.ranges[mid][0] <= start:
+                left = mid + 1
+            else:
+                right = mid
+        return left - 1
+
+class RangeModule:
+
+    def __init__(self):
+        self.line = [0, 10**9+1]
+        self.track = [False, False]
+
+    def addRange(self, left: int, right: int, track=True) -> None:
+        def index(val):
+            # insert val to line if not exist
+            # maintain the track info
+            i = bisect.bisect_left(self.line, val)
+            if self.line[i] != val:
+                self.line.insert(i, val)
+                self.track.insert(i, self.track[i-1])
+            return i
+            
+        i = index(left)
+        j = index(right)
+        self.line[i:j] = [left]
+        self.track[i:j] = [track]
+                
+    def queryRange(self, left: int, right: int) -> bool:
+        i = bisect.bisect(self.line, left) - 1
+        j = bisect.bisect_left(self.line, right)
+        return all(self.track[i:j])
+
+    def removeRange(self, left: int, right: int) -> None:
+        self.addRange(left, right, False)
 
 
 """759. Employee Free Time
@@ -923,6 +1047,498 @@ class Solution:
         dfs(root)
         
         return ''.join(part1 + list(reversed(part2)))
+
+
+"""2115. Find All Possible Recipes from Given Supplies
+
+You have information about `n` different recipes. You are given a string 
+array `recipes` and a 2D string array `ingredients`. The `ith` recipe 
+has the name `recipes[i]`, and you can **create** it if you have **all** 
+the needed ingredients from `ingredients[i]`. Ingredients to a recipe 
+may need to be created from **other** recipes, i.e., `ingredients[i]` 
+may contain a string that is in `recipes`.
+
+You are also given a string array `supplies` containing all the 
+ingredients that you initially have, and you have an infinite supply of 
+all of them.
+
+Return *a list of all the recipes that you can create.* You may return 
+the answer in **any order**.
+
+Note that two recipes may contain each other in their ingredients.
+
+
+**Example 1:**
+
+```
+Input: recipes = ["bread"], ingredients = [["yeast","flour"]], supplies = ["yeast","flour","corn"]
+Output: ["bread"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+```
+
+**Example 2:**
+
+```
+Input: recipes = ["bread","sandwich"], ingredients = [["yeast","flour"],["bread","meat"]], supplies = ["yeast","flour","meat"]
+Output: ["bread","sandwich"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+We can create "sandwich" since we have the ingredient "meat" and can create the ingredient "bread".
+```
+
+**Example 3:**
+
+```
+Input: recipes = ["bread","sandwich","burger"], ingredients = [["yeast","flour"],["bread","meat"],["sandwich","meat","bread"]], supplies = ["yeast","flour","meat"]
+Output: ["bread","sandwich","burger"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+We can create "sandwich" since we have the ingredient "meat" and can create the ingredient "bread".
+We can create "burger" since we have the ingredient "meat" and can create the ingredients "bread" and "sandwich".
+```
+
+ 
+**Constraints:**
+
+- `n == recipes.length == ingredients.length`
+- `1 <= n <= 100`
+- `1 <= ingredients[i].length, supplies.length <= 100`
+- `1 <= recipes[i].length, ingredients[i][j].length, supplies[k].length <= 10`
+- `recipes[i], ingredients[i][j]`, and `supplies[k]` consist only of lowercase English letters.
+- All the values of `recipes` and `supplies` combined are unique.
+- Each `ingredients[i]` does not contain any duplicate values.
+"""
+
+def findAllRecipes(  # type: ignore
+    recipes: List[str], 
+    ingredients: List[List[str]], 
+    supplies: List[str]
+) -> List[str]:
+    
+    recipe2idx = {recipe: i for i, recipe in enumerate(recipes)}
+    memo = {}
+    supplies = set(supplies)  # type: ignore
+    
+    def canMake(recipe):
+        if recipe not in memo:
+            memo[recipe] = False
+            if recipe in recipe2idx:
+                ingre = ingredients[recipe2idx[recipe]]
+                memo[recipe] = all(item in supplies or canMake(item) for item in ingre)
+        return memo[recipe]
+    
+    return [recipe for recipe in recipes if canMake(recipe)]
+
+def findAllRecipes(
+    recipes: List[str], 
+    ingredients: List[List[str]], 
+    supplies: List[str]
+) -> List[str]:
+    
+    supplies = set(supplies)  # type: ignore
+    adj, indegree = defaultdict(list), defaultdict(int)
+    for recipe, ingredient in zip(recipes, ingredients):
+        for item in ingredient:
+            if item not in supplies:
+                adj[item].append(recipe)
+                indegree[recipe] += 1
+                
+    available = [recipe for recipe in recipes if indegree[recipe] == 0]
+    ans = list(available)
+    
+    while available:
+        for neigh in adj[available.pop()]:
+            indegree[neigh] -= 1
+            if indegree[neigh] == 0:
+                ans.append(neigh)
+                available.append(neigh)
+    
+    return ans
+
+
+"""2128. Remove All Ones With Row and Column Flips
+
+You are given an `m x n` binary matrix `grid`.
+
+In one operation, you can choose **any** row or column and flip each
+value in that row or column (i.e., changing all `0`'s to `1`'s, and 
+all `1`'s to `0`'s).
+
+Return `true` *if it is possible to remove all* `1`*'s from* `grid` 
+using **any** number of operations or `false` otherwise.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/01/03/image-20220103191300-1.png)
+
+```
+Input: grid = [[0,1,0],[1,0,1],[0,1,0]]
+Output: true
+Explanation: One possible way to remove all 1's from grid is to:
+- Flip the middle row
+- Flip the middle column
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/01/03/image-20220103181204-7.png)
+
+```
+Input: grid = [[1,1,0],[0,0,0],[0,0,0]]
+Output: false
+Explanation: It is impossible to remove all 1's from grid.
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2022/01/03/image-20220103181224-8.png)
+
+```
+Input: grid = [[0]]
+Output: true
+Explanation: There are no 1's in grid.
+```
+
+
+**Constraints:**
+
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 300`
+- `grid[i][j]` is either `0` or `1`.
+"""
+
+
+def removeOnes(grid: List[List[int]]) -> bool:
+    """no matter how we flip, since we can only flip an *entire*
+    row or column, for any two of rows, all corresponding 
+    digits in two rows must be either all same or all opposite"""
+    
+    m, n = len(grid), len(grid[0])
+    for i in range(1, m):
+        xor_count = 0
+        for j in range(n):
+            xor_count += grid[0][j] ^ grid[i][j]
+        if xor_count not in (0, n):
+            return False
+    
+    return True
+
+
+"""2135. Count Words Obtained After Adding a Letter
+
+You are given two **0-indexed** arrays of strings `startWords` and 
+`targetWords`. Each string consists of **lowercase English letters** only.
+
+For each string in `targetWords`, check if it is possible to choose a 
+string from `startWords` and perform a **conversion operation** on it 
+to be equal to that from `targetWords`.
+
+The **conversion operation** is described in the following two steps:
+
+1. Append any lowercase letter that is not present in the string to its end.
+   - For example, if the string is `"abc"`, the letters `'d'`, `'e'`, 
+   or `'y'` can be added to it, but not `'a'`. If `'d'` is added, the 
+   resulting string will be `"abcd"`.
+2. Rearrange the letters of the new string in any arbitrary order.
+   - For example, `"abcd"` can be rearranged to `"acbd"`, `"bacd"`, 
+   `"cbda"`, and so on. Note that it can also be rearranged to `"abcd"` itself.
+
+Return *the **number of strings** in* `targetWords` *that can be obtained 
+by performing the operations on **any** string of* `startWords`.
+
+**Note** that you will only be verifying if the string in `targetWords` 
+can be obtained from a string in `startWords` by performing the operations. 
+The strings in `startWords` **do not** actually change during this process.
+
+
+**Example 1:**
+
+```
+Input: startWords = ["ant","act","tack"], targetWords = ["tack","act","acti"]
+Output: 2
+Explanation:
+- In order to form targetWords[0] = "tack", we use startWords[1] = "act", append 'k' to it, and rearrange "actk" to "tack".
+- There is no string in startWords that can be used to obtain targetWords[1] = "act".
+  Note that "act" does exist in startWords, but we must append one letter to the string before rearranging it.
+- In order to form targetWords[2] = "acti", we use startWords[1] = "act", append 'i' to it, and rearrange "acti" to "acti" itself.
+```
+
+**Example 2:**
+
+```
+Input: startWords = ["ab","a"], targetWords = ["abc","abcd"]
+Output: 1
+Explanation:
+- In order to form targetWords[0] = "abc", we use startWords[0] = "ab", add 'c' to it, and rearrange it to "abc".
+- There is no string in startWords that can be used to obtain targetWords[1] = "abcd".
+```
+
+
+**Constraints:**
+
+- `1 <= startWords.length, targetWords.length <= 5 * 104`
+- `1 <= startWords[i].length, targetWords[j].length <= 26`
+- Each string of `startWords` and `targetWords` consists of lowercase English letters only.
+- No letter occurs more than once in any string of `startWords` or `targetWords`.
+"""
+
+def wordCount(startWords: List[str], targetWords: List[str]) -> int:
+    def char2int(char):
+        return ord(char) - ord('a')
+    def word_hash(word):
+        hash_value = 0
+        for char in word:
+            hash_value |= 1 << char2int(char)
+        return hash_value
+    
+    hashes = {word_hash(word) for word in startWords}
+    
+    rval = 0    
+    for word in targetWords:
+        hash_value = word_hash(word)
+        for char in word:
+            i = char2int(char)
+            if hash_value & 1 << i and hash_value & (~ (1 << i)) in hashes:
+                rval += 1
+                break
+                
+    return rval
+    
+    
+"""2158. Amount of New Area Painted Each Day
+
+There is a long and thin painting that can be represented by a number 
+line. You are given a **0-indexed** 2D integer array `paint` of length 
+`n`, where `paint[i] = [starti, endi]`. This means that on the `ith` day 
+you need to paint the area **between** `starti` and `endi`.
+
+Painting the same area multiple times will create an uneven painting so 
+you only want to paint each area of the painting at most **once**.
+
+Return *an integer array* `worklog` *of length* `n`*, where* `worklog[i]` 
+*is the amount of **new** area that you painted on the* `ith` *day.*
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/02/01/screenshot-2022-02-01-at-17-16-16-diagram-drawio-diagrams-net.png)
+
+```
+Input: paint = [[1,4],[4,7],[5,8]]
+Output: [3,3,1]
+Explanation:
+On day 0, paint everything between 1 and 4.
+The amount of new area painted on day 0 is 4 - 1 = 3.
+On day 1, paint everything between 4 and 7.
+The amount of new area painted on day 1 is 7 - 4 = 3.
+On day 2, paint everything between 7 and 8.
+Everything between 5 and 7 was already painted on day 1.
+The amount of new area painted on day 2 is 8 - 7 = 1. 
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/02/01/screenshot-2022-02-01-at-17-17-45-diagram-drawio-diagrams-net.png)
+
+```
+Input: paint = [[1,4],[5,8],[4,7]]
+Output: [3,3,1]
+Explanation:
+On day 0, paint everything between 1 and 4.
+The amount of new area painted on day 0 is 4 - 1 = 3.
+On day 1, paint everything between 5 and 8.
+The amount of new area painted on day 1 is 8 - 5 = 3.
+On day 2, paint everything between 4 and 5.
+Everything between 5 and 7 was already painted on day 1.
+The amount of new area painted on day 2 is 5 - 4 = 1. 
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2022/02/01/screenshot-2022-02-01-at-17-19-49-diagram-drawio-diagrams-net.png)
+
+```
+Input: paint = [[1,5],[2,4]]
+Output: [4,0]
+Explanation:
+On day 0, paint everything between 1 and 5.
+The amount of new area painted on day 0 is 5 - 1 = 4.
+On day 1, paint nothing because everything between 2 and 4 was already painted on day 0.
+The amount of new area painted on day 1 is 0.
+```
+
+
+**Constraints:**
+
+- `1 <= paint.length <= 105`
+- `paint[i].length == 2`
+- `0 <= starti < endi <= 5 * 104`
+"""
+
+class SegmentTree:  # type: ignore
+    
+    def __init__(self, n):
+        self.n = n
+        self.tree = {}
+        self._build(0, 0, self.n-1)
+        
+    def _build(self, treeIdx, left, right):
+        if left == right:
+            self.tree[treeIdx] = 1
+        else:
+            mid = (left + right) // 2
+            self._build(treeIdx * 2 + 1, left, mid)
+            self._build(treeIdx * 2 + 2, mid + 1, right)
+            self.tree[treeIdx] = self.tree[treeIdx * 2 + 1] + self.tree[treeIdx * 2 + 2]
+    
+    def range_sum(self, treeIdx, treeLeft, treeRight, left, right):
+        if left <= treeLeft and right >= treeRight:
+            return self.tree[treeIdx]
+        if left > treeRight or right < treeLeft:
+            return 0
+        treeMid = (treeLeft + treeRight) // 2
+        leftSum = self.range_sum(treeIdx * 2 + 1, treeLeft, treeMid, left, right)
+        rightSum = self.range_sum(treeIdx * 2 + 2, treeMid + 1, treeRight, left, right)
+        return leftSum + rightSum
+    
+    def range_update(self, treeIdx, treeLeft, treeRight, left, right):
+        if treeRight < left or treeLeft > right:
+            return
+        if treeLeft == treeRight:
+            self.tree[treeIdx] = 0
+        else:
+            treeMid = (treeLeft + treeRight) // 2
+            self.range_update(treeIdx * 2 + 1, treeLeft, treeMid, left, right)
+            self.range_update(treeIdx * 2 + 2, treeMid + 1, treeRight, left, right)
+            self.tree[treeIdx] = self.tree[treeIdx * 2 + 1] + self.tree[treeIdx * 2 + 2]
+
+
+def amountPainted(paint: List[List[int]]) -> List[int]:  # type: ignore
+    """Segment Tree - TLE in Python"""
+    min_val, max_val = min([x[0] for x in paint]), max([x[1] for x in paint])
+    n = max_val - min_val
+    seg_tree = SegmentTree(n)  # type: ignore
+    
+    rval = []
+    for start, end in paint:
+        rval.append(seg_tree.range_sum(0, 0, n-1, start-min_val, end-min_val-1))  # type: ignore
+        seg_tree.range_update(0, 0, n-1, start-min_val, end-min_val-1)  # type: ignore
+    
+    return rval
+
+def amountPainted(paint: List[List[int]]) -> List[int]:  # type: ignore
+    # jump line
+    line, rval = [0] * 500001, [0] * len(paint)
+    
+    for i, (start, end) in enumerate(paint):
+        while start < end:
+            jump = max(start + 1, line[start])
+            rval[i] += 1 if line[start] == 0 else 0
+            line[start] = max(line[start], end)
+            start = jump
+    
+    return rval
+
+def amountPainted(paint: List[List[int]]) -> List[int]:
+    # sorted list
+    records = []
+    for i, (start, end) in enumerate(paint):
+        records.append((start, i, 0))
+        records.append((end, i, 1))
+    records.sort()
+    
+    rval = [0] * len(paint)
+    indexes = SortedList()
+    last_idx = 0
+    for idx, i, status in records:
+        if indexes:
+            rval[indexes[0]] += idx - last_idx
+        if status == 0:
+            indexes.add(i)
+        else:
+            # since end < start, i must have been
+            # added to indexes before remove
+            indexes.remove(i)
+        last_idx = idx
+            
+    return rval
+
+
+"""2178. Maximum Split of Positive Even Integers
+
+You are given an integer `finalSum`. Split it into a sum of a **maximum** 
+number of **unique** positive even integers.
+
+- For example, given `finalSum = 12`, the following splits are **valid** 
+(unique positive even integers summing up to `finalSum`): `(12)`, `(2 + 10)`, 
+`(2 + 4 + 6)`, and `(4 + 8)`. Among them, `(2 + 4 + 6)` contains the
+maximum number of integers. Note that `finalSum` cannot be split into 
+`(2 + 2 + 4 + 4)` as all the numbers should be unique.
+
+Return *a list of integers that represent a valid split containing a 
+**maximum** number of integers*. If no valid split exists for `finalSum`, 
+return *an **empty** list*. You may return the integers in **any** order.
+
+
+**Example 1:**
+
+```
+Input: finalSum = 12
+Output: [2,4,6]
+Explanation: The following are valid splits: (12), (2 + 10), (2 + 4 + 6), and (4 + 8).
+(2 + 4 + 6) has the maximum number of integers, which is 3. Thus, we return [2,4,6].
+Note that [2,6,4], [6,2,4], etc. are also accepted.
+```
+
+**Example 2:**
+
+```
+Input: finalSum = 7
+Output: []
+Explanation: There are no valid splits for the given finalSum.
+Thus, we return an empty array.
+```
+
+**Example 3:**
+
+```
+Input: finalSum = 28
+Output: [6,8,2,12]
+Explanation: The following are valid splits: (2 + 26), (6 + 8 + 2 + 12), and (4 + 24). 
+(6 + 8 + 2 + 12) has the maximum number of integers, which is 4. Thus, we return [6,8,2,12].
+Note that [10,2,4,12], [6,2,4,16], etc. are also accepted.
+```
+
+
+**Constraints:**
+
+- `1 <= finalSum <= 1010`
+"""
+
+
+def maximumEvenSplit(finalSum: int) -> List[int]:
+    ''' Greedy: start from min even number
+    
+    finalSum = 2 + 4 + ... + 2n + m where m > 2n
+    => n * (n + 3) < finalSum
+    
+    binary search if just need to return length
+    '''
+    if finalSum % 2: return []
+    
+    rval = [] 
+    val = 2
+    
+    while val * 2 < finalSum:
+        rval.append(val)
+        finalSum -= val
+        val += 2
+    rval.append(finalSum)
+    
+    return rval
 
 
 """2259. Remove Digit From Number to Maximize Result
