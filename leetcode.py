@@ -5,7 +5,7 @@ from itertools import accumulate
 from math import gcd
 from operator import itemgetter
 from collections import Counter, defaultdict, deque
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 from sortedcontainers import SortedList
 
 
@@ -197,6 +197,136 @@ def isStrobogrammatic(num: str) -> bool:
         if not num[i] + num[n-1-i] in ('00', '11', '88', '69', '96'):
             return False
     return True
+
+
+"""329. Longest Increasing Path in a Matrix
+
+Given an `m x n` integers `matrix`, return *the length of the longest 
+increasing path in* `matrix`.
+
+From each cell, you can either move in four directions: left, right, up, 
+or down. You **may not** move **diagonally** or move **outside the 
+boundary** (i.e., wrap-around is not allowed).
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/01/05/grid1.jpg)
+
+```
+Input: matrix = [[9,9,4],[6,6,8],[2,1,1]]
+Output: 4
+Explanation: The longest increasing path is [1, 2, 6, 9].
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/01/27/tmp-grid.jpg)
+
+```
+Input: matrix = [[3,4,5],[3,2,6],[2,2,1]]
+Output: 4
+Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+```
+
+**Example 3:**
+
+```
+Input: matrix = [[1]]
+Output: 1
+```
+
+
+**Constraints:**
+
+- `m == matrix.length`
+- `n == matrix[i].length`
+- `1 <= m, n <= 200`
+- `0 <= matrix[i][j] <= 231 - 1`
+"""
+
+def longestIncreasingPath(matrix: List[List[int]]) -> int:  # type: ignore
+    # DP with sort
+    m, n = len(matrix), len(matrix[0])
+    nodes = sorted(
+        [(i, j) for i in range(m) for j in range(n)], 
+        key=lambda x: matrix[x[0]][x[1]]
+    )
+    rval = 1
+    dist = [[1] * n for _ in range(m)]
+    
+    for i, j in nodes:
+        rval = max(rval, dist[i][j])
+        for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+            if 0 <= ni < m and 0 <= nj < n and matrix[ni][nj] > matrix[i][j]:
+                dist[ni][nj] = max(dist[ni][nj], dist[i][j] + 1)
+                
+    return rval
+
+def longestIncreasingPath(matrix: List[List[int]]) -> int:  # type: ignore
+    # this is a DP problem with topological sort
+    
+    m, n = len(matrix), len(matrix[0])
+    
+    # treat the matrix as a graph, connect node a -> node b only if 
+    # val(a) < val(b), then traverse the graph using topological sort
+    # we can save the adj
+    adj = defaultdict(list)
+    indegree = defaultdict(int)
+    for i in range(m):
+        for j in range(n):
+            for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+                if 0 <= ni < m and 0 <= nj < n and matrix[ni][nj] > matrix[i][j]:
+                    adj[(i, j)].append((ni, nj))
+                    indegree[(ni, nj)] += 1
+    
+    rval = 1
+    dist = [[1] * n for _ in range(m)]
+    queue = [(i, j) for i in range(m) for j in range(n) if indegree[(i, j)] == 0]
+    
+    while queue:
+        i, j = queue.pop()
+        rval = max(rval, dist[i][j])
+        for ni, nj in adj[(i, j)]:
+            dist[ni][nj] = max(dist[ni][nj], dist[i][j] + 1)
+            indegree[(ni, nj)] -= 1
+            if indegree[(ni, nj)] == 0:
+                queue.append((ni, nj))
+    return rval
+
+def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+    # this is a DP problem
+    
+    m, n = len(matrix), len(matrix[0])
+    
+    # treat the matrix as a graph, connect node a -> node b only if 
+    # val(a) < val(b), then traverse the graph using topological sort
+    indegree = defaultdict(int)
+    for i in range(m):
+        for j in range(n):
+            for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+                if 0 <= ni < m and 0 <= nj < n and matrix[ni][nj] > matrix[i][j]:
+                    indegree[(ni, nj)] += 1
+    
+    # we can further optimize the answer by observing that the longest
+    # increasing path essentially equals to number of layers in the DAG
+    # (first layer: zero indegree, second layer: new zero indegree after
+    # remove first layer) - peeling the onion
+    # this way, we don't need to keep track the answer for each cell
+    rval = 0
+    queue = [(i, j) for i in range(m) for j in range(n) if indegree[(i, j)] == 0]
+    
+    while queue:
+        new_layer = []
+        for i, j in queue:
+            for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+                if 0 <= ni < m and 0 <= nj < n and matrix[ni][nj] > matrix[i][j]:
+                    indegree[(ni, nj)] -= 1
+                    if indegree[(ni, nj)] == 0:
+                        new_layer.append((ni, nj))
+        queue = new_layer
+        rval += 1
+    return rval
 
 
 """346. Moving Average from Data Stream
@@ -631,6 +761,159 @@ def employeeFreeTime(self, schedule: List[List[Interval]]) -> List[Interval]:
     return free_time
 
 
+"""778. Swim in Rising Water
+
+You are given an `n x n` integer matrix `grid` where each value 
+`grid[i][j]` represents the elevation at that point `(i, j)`.
+
+The rain starts to fall. At time `t`, the depth of the water everywhere 
+is `t`. You can swim from a square to another 4-directionally adjacent 
+square if and only if the elevation of both squares individually are at 
+most `t`. You can swim infinite distances in zero time. Of course, you 
+must stay within the boundaries of the grid during your swim.
+
+Return *the least time until you can reach the bottom right square* 
+`(n - 1, n - 1)` *if you start at the top left square* `(0, 0)`.
+
+ 
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/06/29/swim1-grid.jpg)
+
+```
+Input: grid = [[0,2],[1,3]]
+Output: 3
+Explanation:
+At time 0, you are in grid location (0, 0).
+You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0.
+You cannot reach point (1, 1) until time 3.
+When the depth of water is 3, we can swim anywhere inside the grid.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/06/29/swim2-grid-1.jpg)
+
+```
+Input: grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
+Output: 16
+Explanation: The final route is shown.
+We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
+```
+
+
+**Constraints:**
+
+- `n == grid.length`
+- `n == grid[i].length`
+- `1 <= n <= 50`
+- `0 <= grid[i][j] < n2`
+- Each value `grid[i][j]` is **unique**.
+"""
+
+def swimInWater(grid: List[List[int]]) -> int:  # type: ignore
+    '''
+    Dijkstra node (i,j) -> min time to reach (i, j) from (0, 0)
+    '''
+    n = len(grid)
+    dist = {(0, 0): grid[0][0]}
+    for i in range(n):
+        for j in range(n):
+            if i != 0 or j != 0:
+                dist[(i, j)] = float('inf')
+    
+    queue = [(grid[0][0], (0, 0))]
+    S = set((0, 0))
+    
+    while queue:
+        _, (i, j) = heapq.heappop(queue)
+        if (i, j) in S:
+            continue
+        S.add((i, j))
+        for ni, nj in zip((i-1, i+1, i, i), (j, j, j-1, j+1)):
+            if 0 <= ni < n and 0 <= nj < n:
+                alt = max(grid[ni][nj], dist[(i, j)])
+                if dist[(ni, nj)] > alt:
+                    dist[(ni, nj)] = alt
+                    heapq.heappush(queue, (alt, (ni, nj)))
+                    
+    return dist[(n-1, n-1)]
+
+def swimInWater(grid: List[List[int]]) -> int:  # type: ignore
+    """
+    binary search
+    """
+    n = len(grid)
+    
+    def canSwimUntilTime(t):
+        visited = set()
+        def dfs(i, j, t):
+            if i == n-1 and j == n-1:
+                return True
+            visited.add((i, j))
+            for ni, nj in zip((i-1, i+1, i, i), (j, j, j-1, j+1)):
+                if (
+                    0 <= ni < n # in grid
+                    and 0 <= nj < n # in grid
+                    and grid[ni][nj] <= t # can Swim
+                    and (ni, nj) not in visited # prevent loop
+                    and dfs(ni, nj, t)
+                ):
+                    return True
+            return False
+        # we can remove the below line as the left in binary search
+        # below starts from grid[0][0]
+        # if grid[0][0] > t: return False
+        return dfs(0, 0, t)
+        
+    left, right = grid[0][0], n * n
+    
+    while left < right:
+        mid = (left + right) // 2
+        if canSwimUntilTime(mid):
+            right = mid
+        else:
+            left = mid + 1
+    
+    return left
+
+def swimInWater(grid: List[List[int]]) -> int:
+    # (greedy) minimal spanning tree
+    
+    groups = {}
+    rank = defaultdict(int)
+    def parent(node):
+        grp = groups.setdefault(node, node)
+        if grp != node:
+            groups[node] = parent(grp)
+        return groups[node]
+    
+    def union(a, b):
+        grp_a, grp_b = parent(a), parent(b)
+        if grp_a == grp_b:
+            return
+        if rank[grp_a] < rank[grp_b]:
+            grp_a, grp_b = grp_b, grp_a
+        groups[grp_b] = grp_a
+        if rank[grp_a] == rank[grp_b]:
+            rank[grp_a] += 1
+    
+    n = len(grid)
+    nodes = sorted(
+        [(i, j) for i in range(n) for j in range(n)], 
+        key=lambda x: grid[x[0]][x[1]]
+    )
+    visited = [[False] * n for _ in range(n)]
+    for i, j in nodes:
+        visited[i][j] = True
+        for ni, nj in zip((i-1, i+1, i, i), (j, j, j-1, j+1)):
+            if 0 <= ni < n and 0 <= nj < n and visited[ni][nj]:
+                union((i, j), (ni, nj))
+                
+        if parent((0, 0)) == parent((n-1, n-1)):
+            return grid[i][j]
+
+
 """791. Custom Sort String
 
 You are given two strings order and s. All the words of `order` are 
@@ -685,6 +968,92 @@ def customSortString(self, order: str, s: str) -> str:
         
     return ''.join(ordered)
 
+
+"""1101. The Earliest Moment When Everyone Become Friends
+
+There are n people in a social group labeled from `0` to `n - 1`. You 
+are given an array `logs` where `logs[i] = [timestampi, xi, yi]` 
+indicates that `xi` and `yi` will be friends at the time `timestampi`.
+
+Friendship is **symmetric**. That means if `a` is friends with `b`, 
+then `b` is friends with `a`. Also, person `a` is acquainted with a 
+person `b` if `a` is friends with `b`, or `a` is a friend of someone 
+acquainted with `b`.
+
+Return *the earliest time for which every person became acquainted with 
+every other person*. If there is no such earliest time, return `-1`.
+
+
+**Example 1:**
+
+```
+Input: logs = [[20190101,0,1],[20190104,3,4],[20190107,2,3],[20190211,1,5],[20190224,2,4],[20190301,0,3],[20190312,1,2],[20190322,4,5]], n = 6
+Output: 20190301
+Explanation: 
+The first event occurs at timestamp = 20190101 and after 0 and 1 become friends we have the following friendship groups [0,1], [2], [3], [4], [5].
+The second event occurs at timestamp = 20190104 and after 3 and 4 become friends we have the following friendship groups [0,1], [2], [3,4], [5].
+The third event occurs at timestamp = 20190107 and after 2 and 3 become friends we have the following friendship groups [0,1], [2,3,4], [5].
+The fourth event occurs at timestamp = 20190211 and after 1 and 5 become friends we have the following friendship groups [0,1,5], [2,3,4].
+The fifth event occurs at timestamp = 20190224 and as 2 and 4 are already friends anything happens.
+The sixth event occurs at timestamp = 20190301 and after 0 and 3 become friends we have that all become friends.
+```
+
+**Example 2:**
+
+```
+Input: logs = [[0,2,0],[1,0,1],[3,0,3],[4,1,2],[7,3,1]], n = 4
+Output: 3
+```
+
+
+**Constraints:**
+
+- `2 <= n <= 100`
+- `1 <= logs.length <= 104`
+- `logs[i].length == 3`
+- `0 <= timestampi <= 109`
+- `0 <= xi, yi <= n - 1`
+- `xi != yi`
+- All the values `timestampi` are **unique**.
+- All the pairs `(xi, yi)` occur at most one time in the input.
+"""
+
+def earliestAcq(logs: List[List[int]], n: int) -> int:
+    '''Minimum Spanning Tree with Union Find'''
+    
+    group = {}
+    size = defaultdict(lambda: 1)
+    
+    def root(node):
+        grp = group.setdefault(node, node)
+        if grp != node:
+            group[node] = root(grp)
+        return group[node]
+    
+    def union(a, b):
+        # Union a and b if not yet; return
+        # if there is group with size n
+        grp_a, grp_b = root(a), root(b)
+        if grp_a == grp_b:
+            # we can return False safely 
+            # as if grp_a has size n, we
+            # will stop the algo
+            return False
+        if size[grp_a] < size[grp_b]:
+            grp_a, grp_b = grp_b, grp_a
+        group[grp_b] = grp_a
+        size[grp_a] += size[grp_b]
+        if size[grp_a] == n:
+            return True
+        return False
+    
+    logs.sort()
+    
+    for time, a, b in logs:
+        if union(a, b):
+            return time
+    return -1
+    
 
 """1411. Number of Ways to Paint N × 3 Grid
 
@@ -741,7 +1110,66 @@ def numOfWays(n: int) -> int:
     for i in range(1, n):
         x, y = 3*x + 2*y, 2*x + 2*y
     return (x + y) % 1000000007
+
+
+"""1423. Maximum Points You Can Obtain from Cards
+
+There are several cards **arranged in a row**, and each card has an 
+associated number of points. The points are given in the integer array 
+`cardPoints`.
+
+In one step, you can take one card from the beginning or from the end 
+of the row. You have to take exactly `k` cards.
+
+Your score is the sum of the points of the cards you have taken.
+
+Given the integer array `cardPoints` and the integer `k`, return the 
+*maximum score* you can obtain.
+
+
+**Example 1:**
+
+```
+Input: cardPoints = [1,2,3,4,5,6,1], k = 3
+Output: 12
+Explanation: After the first step, your score will always be 1. However, 
+choosing the rightmost card first will maximize your total score. 
+The optimal strategy is to take the three cards on the right, giving 
+a final score of 1 + 6 + 5 = 12.
+```
+
+**Example 2:**
+
+```
+Input: cardPoints = [2,2,2], k = 2
+Output: 4
+Explanation: Regardless of which two cards you take, your score will always be 4.
+```
+
+**Example 3:**
+
+```
+Input: cardPoints = [9,7,7,9,7,7,9], k = 7
+Output: 55
+Explanation: You have to take all the cards. Your score is the sum of points of all cards.
+```
+
+
+**Constraints:**
+
+- `1 <= cardPoints.length <= 105`
+- `1 <= cardPoints[i] <= 104`
+- `1 <= k <= cardPoints.length`
+"""
+
+def maxScore(self, cardPoints: List[int], k: int) -> int:
+    cur_sum = global_max = sum(cardPoints[:k])
+    for i in range(k):
+        cur_sum = cur_sum - cardPoints[k-i-1] + cardPoints[-i-1]
+        global_max = max(global_max, cur_sum)
     
+    return global_max
+
 
 """1891. Cutting Ribbons
 
