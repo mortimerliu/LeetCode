@@ -969,6 +969,82 @@ def customSortString(self, order: str, s: str) -> str:
     return ''.join(ordered)
 
 
+"""939. Minimum Area Rectangle
+
+You are given an array of points in the **X-Y** plane `points` where 
+`points[i] = [xi, yi]`.
+
+Return *the minimum area of a rectangle formed from these points, with 
+sides parallel to the X and Y axes*. If there is not any such rectangle, 
+return `0`.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/08/03/rec1.JPG)
+
+```
+Input: points = [[1,1],[1,3],[3,1],[3,3],[2,2]]
+Output: 4
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/08/03/rec2.JPG)
+
+```
+Input: points = [[1,1],[1,3],[3,1],[3,3],[4,1],[4,3]]
+Output: 2
+```
+
+
+**Constraints:**
+
+- `1 <= points.length <= 500`
+- `points[i].length == 2`
+- `0 <= xi, yi <= 4 * 104`
+- All the given points are **unique**.
+"""
+
+def minAreaRect(points: List[List[int]]) -> int:
+    points_by_x = defaultdict(set)
+    for x, y in points:
+        points_by_x[x].add(y)
+    points_by_x = {k: v for k, v in points_by_x.items() if len(v) >= 2}
+    
+    xs = list(points_by_x.keys())
+    #print('x', xs)
+    n = len(xs)
+    res = float('inf')
+    for i in range(n):
+        for j in range(i+1, n):
+            x1, x2 = xs[i], xs[j]
+            ys = points_by_x[x1] & points_by_x[x2]
+            if len(ys) >= 2:
+                #print('y', ys)
+                ys = sorted(ys)
+                for y1, y2 in zip(ys, ys[1:]):
+                    res = min(res, (y2 - y1) * abs(x1 - x2))
+    
+    return res if res < float('inf') else 0  # type: ignore
+
+def minAreaRect(self, points: List[List[int]]) -> int:
+    """A rectangle will be fixed by two points in diagonal
+    
+    check all pairs of points as diagonal of rectangle, cache
+    points seen in a set (same technique as twosum)"""
+    
+    seen = set()
+    rval = float('inf')
+    for x1, y1 in points:
+        for x2, y2 in seen:
+            if (x1, y2) in seen and (x2, y1) in seen:
+                rval = min(rval, abs((x1 - x2) * (y1 - y2)))
+        seen.add((x1, y1))
+    
+    return rval if rval < float('inf') else 0  # type: ignore
+    
+
 """1101. The Earliest Moment When Everyone Become Friends
 
 There are n people in a social group labeled from `0` to `n - 1`. You 
