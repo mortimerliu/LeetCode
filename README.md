@@ -13,3 +13,5 @@ Will add new problems from weekly and biweekly contests once the contests are ov
 + [Weekly 294](https://leetcode.com/contest/weekly-contest-294)
 + [Biweekly 79](https://leetcode.com/contest/biweekly-contest-79/)
 + [Weekly 295](https://leetcode.com/contest/weekly-contest-295)
++ [Weekly 302](https://leetcode.com/contest/weekly-contest-302)
++ [Weekly 303](https://leetcode.com/contest/weekly-contest-303)
