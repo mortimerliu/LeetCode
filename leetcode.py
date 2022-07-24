@@ -493,6 +493,80 @@ def findMinDifference(timePoints: List[str]) -> int:
     min_diff = min(min_diff, minutes[0] + 24 * 60 - minutes[-1])
 
     return min_diff
+
+
+"""562. Longest Line of Consecutive One in Matrix
+
+Given an `m x n` binary matrix `mat`, return *the length of the longest 
+line of consecutive one in the matrix*.
+
+The line could be horizontal, vertical, diagonal, or anti-diagonal.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/04/24/long1-grid.jpg)
+
+```
+Input: mat = [[0,1,1,0],[0,1,1,0],[0,0,0,1]]
+Output: 3
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/04/24/long2-grid.jpg)
+
+```
+Input: mat = [[1,1,1,1],[0,1,1,0],[0,0,0,1]]
+Output: 4
+```
+
+
+**Constraints:**
+
+- `m == mat.length`
+- `n == mat[i].length`
+- `1 <= m, n <= 104`
+- `1 <= m * n <= 104`
+- `mat[i][j]` is either `0` or `1`.
+"""
+
+def longestLine(self, mat: List[List[int]]) -> int:
+    """
+    DFS -> DP 
+    def f(i, j, dir) = longest path ending at (i, j) with
+    direction dir
+    
+    we have 8 directions in total, due to symmetric, we only
+    need to check 4
+    
+    # longest path ending at (i, j) in 4 directions
+    g(i, j) = ( 
+        f(i, j, diag), 
+        f(i, j, right), 
+        f(i, j, anti_diag), 
+        f(i, j, down)
+    )
+    
+    Space can be optimzied to O(m)
+    """
+    
+    m, n = len(mat), len(mat[0])
+    g = [[[0, 0, 0, 0] for _ in range(n+1)] for i in range(m+2)]
+    
+    rval = 0
+    # go thru column by column
+    for j in range(n):
+        for i in range(m):
+            if mat[i][j] == 0:
+                continue
+            g[i+1][j+1][0] = g[i][j][0] + 1
+            g[i+1][j+1][1] = g[i+1][j][1] + 1
+            g[i+1][j+1][2] = g[i+2][j][2] + 1
+            g[i+1][j+1][3] = g[i][j+1][3] + 1
+            rval = max(rval, max(g[i+1][j+1]))
+    
+    return rval
     
 
 """708. Insert into a Sorted Circular Linked List
