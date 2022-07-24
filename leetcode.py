@@ -3773,3 +3773,309 @@ def minimumObstacles(grid: List[List[int]]) -> int:
                     return dist[(ni, nj)]
                 heapq.heappush(queue, (dist[(ni, nj)], ni, nj))
     return -1
+
+
+"""2351. First Letter to Appear Twice
+
+Given a string `s` consisting of lowercase English letters, return *the 
+first letter to appear **twice***.
+
+**Note**:
+
+- A letter `a` appears twice before another letter `b` if the **second** 
+occurrence of `a` is before the **second** occurrence of `b`.
+- `s` will contain at least one letter that appears twice.
+
+
+**Example 1:**
+
+```
+Input: s = "abccbaacz"
+Output: "c"
+Explanation:
+The letter 'a' appears on the indexes 0, 5 and 6.
+The letter 'b' appears on the indexes 1 and 4.
+The letter 'c' appears on the indexes 2, 3 and 7.
+The letter 'z' appears on the index 8.
+The letter 'c' is the first letter to appear twice, because out of all the letters the index of its second occurrence is the smallest.
+```
+
+**Example 2:**
+
+```
+Input: s = "abcdd"
+Output: "d"
+Explanation:
+The only letter that appears twice is 'd' so we return 'd'.
+```
+
+
+**Constraints:**
+
+- `2 <= s.length <= 100`
+- `s` consists of lowercase English letters.
+- `s` has at least one repeated letter.
+"""
+
+def repeatedCharacter(s: str) -> str:
+    seen = set()
+    for c in s:
+        if c in seen:
+            return c
+        seen.add(c)
+    return ''
+        
+        
+"""2352. Equal Row and Column Pairs
+
+Given a **0-indexed** `n x n` integer matrix `grid`, *return the number 
+of pairs* `(Ri, Cj)` *such that row* `Ri` *and column* `Cj` *are equal*.
+
+A row and column pair is considered equal if they contain the same 
+elements in the same order (i.e. an equal array).
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/06/01/ex1.jpg)
+
+```
+Input: grid = [[3,2,1],[1,7,6],[2,7,7]]
+Output: 1
+Explanation: There is 1 equal row and column pair:
+- (Row 2, Column 1): [2,7,7]
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/06/01/ex2.jpg)
+
+```
+Input: grid = [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]
+Output: 3
+Explanation: There are 3 equal row and column pairs:
+- (Row 0, Column 0): [3,1,2,2]
+- (Row 2, Column 2): [2,4,2,2]
+- (Row 3, Column 2): [2,4,2,2]
+```
+
+
+**Constraints:**
+
+- `n == grid.length == grid[i].length`
+- `1 <= n <= 200`
+- `1 <= grid[i][j] <= 105`
+"""
+
+def equalPairs(self, grid: List[List[int]]) -> int:  # type: ignore
+    hashes = defaultdict(int)
+    for row in grid:
+        hash_ = ','.join([str(ele) for ele in row])
+        hashes[hash_] += 1
+    
+    rval = 0
+    m, n = len(grid), len(grid[0])
+    for j in range(n):
+        hash_ = []
+        for i in range(m):
+            hash_.append(str(grid[i][j]))
+        hash_ = ','.join(hash_)
+        rval += hashes[hash_]
+    
+    return rval
+
+def equalPairs(self, grid: List[List[int]]) -> int:
+    "Same idea with simplified codes"
+    pairs = 0
+    cnt = Counter(tuple(row) for row in grid)
+    for tpl in zip(*grid): # generate columns
+        pairs += cnt[tpl]
+    return pairs
+
+
+"""2353. Design a Food Rating System
+
+Design a food rating system that can do the following:
+
+- **Modify** the rating of a food item listed in the system.
+- Return the highest-rated food item for a type of cuisine in the system.
+
+Implement the `FoodRatings` class:
+
+- `FoodRatings(String[] foods, String[] cuisines, int[] ratings)` Initializes the system. The food items are described by `foods`, `cuisines` and `ratings`, all of which have a length of `n`.
+  - `foods[i]` is the name of the `ith` food,
+  - `cuisines[i]` is the type of cuisine of the `ith` food, and
+  - `ratings[i]` is the initial rating of the `ith` food.
+- `void changeRating(String food, int newRating)` Changes the rating of the food item with the name `food`.
+- `String highestRated(String cuisine)` Returns the name of the food item that has the highest rating for the given type of `cuisine`. If there is a tie, return the item with the **lexicographically smaller** name.
+
+Note that a string `x` is lexicographically smaller than string `y` if `x` comes before `y` in dictionary order, that is, either `x` is a prefix of `y`, or if `i` is the first position such that `x[i] != y[i]`, then `x[i]` comes before `y[i]` in alphabetic order.
+
+
+**Example 1:**
+
+```
+Input
+["FoodRatings", "highestRated", "highestRated", "changeRating", "highestRated", "changeRating", "highestRated"]
+[[["kimchi", "miso", "sushi", "moussaka", "ramen", "bulgogi"], ["korean", "japanese", "japanese", "greek", "japanese", "korean"], [9, 12, 8, 15, 14, 7]], ["korean"], ["japanese"], ["sushi", 16], ["japanese"], ["ramen", 16], ["japanese"]]
+Output
+[null, "kimchi", "ramen", null, "sushi", null, "ramen"]
+
+Explanation
+FoodRatings foodRatings = new FoodRatings(["kimchi", "miso", "sushi", "moussaka", "ramen", "bulgogi"], ["korean", "japanese", "japanese", "greek", "japanese", "korean"], [9, 12, 8, 15, 14, 7]);
+foodRatings.highestRated("korean"); // return "kimchi"
+                                    // "kimchi" is the highest rated korean food with a rating of 9.
+foodRatings.highestRated("japanese"); // return "ramen"
+                                      // "ramen" is the highest rated japanese food with a rating of 14.
+foodRatings.changeRating("sushi", 16); // "sushi" now has a rating of 16.
+foodRatings.highestRated("japanese"); // return "sushi"
+                                      // "sushi" is the highest rated japanese food with a rating of 16.
+foodRatings.changeRating("ramen", 16); // "ramen" now has a rating of 16.
+foodRatings.highestRated("japanese"); // return "ramen"
+                                      // Both "sushi" and "ramen" have a rating of 16.
+                                      // However, "ramen" is lexicographically smaller than "sushi".
+```
+
+
+**Constraints:**
+
+- `1 <= n <= 2 * 104`
+- `n == foods.length == cuisines.length == ratings.length`
+- `1 <= foods[i].length, cuisines[i].length <= 10`
+- `foods[i]`, `cuisines[i]` consist of lowercase English letters.
+- `1 <= ratings[i] <= 108`
+- All the strings in `foods` are **distinct**.
+- `food` will be the name of a food item in the system across all calls to `changeRating`.
+- `cuisine` will be a type of cuisine of **at least one** food item in the system across all calls to `highestRated`.
+- At most `2 * 104` calls **in total** will be made to `changeRating` and `highestRated`.
+"""
+
+class FoodRatings:  # type: ignore
+
+    def __init__(self, foods: List[str], cuisines: List[str], ratings: List[int]):
+        self.foods = defaultdict(dict)
+        self.queue = defaultdict(list)
+        self.f2c = {}
+        for food, cuisine, rating in zip(foods, cuisines, ratings):
+            self.foods[cuisine][food] = -rating
+            heapq.heappush(self.queue[cuisine], (-rating, food))
+            self.f2c[food] = cuisine
+            
+    def changeRating(self, food: str, newRating: int) -> None:
+        cuisine = self.f2c[food]
+        self.foods[cuisine][food] = -newRating
+        heapq.heappush(self.queue[cuisine], (-newRating, food))
+
+    def highestRated(self, cuisine: str) -> str:
+        foods = self.foods[cuisine]
+        queue = self.queue[cuisine]
+        while queue:
+            rating, food = queue[0]
+            if rating == foods[food]:
+                return food
+            else:
+                heapq.heappop(queue)
+                continue
+        return ''       
+class FoodRatings:
+
+    def __init__(self, foods: List[str], cuisines: List[str], ratings: List[int]):
+        self.f2cr = {}
+        self.lists = defaultdict(SortedList)
+        for f, c, r in zip(foods, cuisines, ratings):
+            # use negative rating as we want the max
+            self.f2cr[f] = (c, -r)
+            self.lists[c].add((-r, f))
+
+    def changeRating(self, food: str, newRating: int) -> None:
+        cuisine, rating = self.f2cr[food]
+        self.f2cr[food] = (cuisine, -newRating)
+        self.lists[cuisine].remove((rating, food))  # type: ignore
+        self.lists[cuisine].add((-newRating, food))
+
+    def highestRated(self, cuisine: str) -> str:
+        return self.lists[cuisine][0][1]
+    
+
+"""2354. Number of Excellent Pairs
+
+You are given a **0-indexed** positive integer array `nums` and a positive integer `k`.
+
+A pair of numbers `(num1, num2)` is called **excellent** if the following conditions are satisfied:
+
+- **Both** the numbers `num1` and `num2` exist in the array `nums`.
+- The sum of the number of set bits in `num1 OR num2` and `num1 AND num2` is greater than or equal to `k`, where `OR` is the bitwise **OR** operation and `AND` is the bitwise **AND** operation.
+
+Return *the number of **distinct** excellent pairs*.
+
+Two pairs `(a, b)` and `(c, d)` are considered distinct if either `a != c` or `b != d`. For example, `(1, 2)` and `(2, 1)` are distinct.
+
+**Note** that a pair `(num1, num2)` such that `num1 == num2` can also be excellent if you have at least **one** occurrence of `num1` in the array.
+
+
+**Example 1:**
+
+```
+Input: nums = [1,2,3,1], k = 3
+Output: 5
+Explanation: The excellent pairs are the following:
+- (3, 3). (3 AND 3) and (3 OR 3) are both equal to (11) in binary. The total number of set bits is 2 + 2 = 4, which is greater than or equal to k = 3.
+- (2, 3) and (3, 2). (2 AND 3) is equal to (10) in binary, and (2 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
+- (1, 3) and (3, 1). (1 AND 3) is equal to (01) in binary, and (1 OR 3) is equal to (11) in binary. The total number of set bits is 1 + 2 = 3.
+So the number of excellent pairs is 5.
+```
+
+**Example 2:**
+
+```
+Input: nums = [5,1,1], k = 10
+Output: 0
+Explanation: There are no excellent pairs for this array.
+```
+
+
+**Constraints:**
+
+- `1 <= nums.length <= 105`
+- `1 <= nums[i] <= 109`
+- `1 <= k <= 60`
+"""
+
+def countExcellentPairs(nums: List[int], k: int) -> int:  # type: ignore
+    '''
+    setbit(num1 & num2) + setbit(num1 | num2) = setbit(num1) + setbit(num2)
+    '''
+    
+    setbits = []
+    for num in set(nums):
+        setbit = 0
+        while num > 0:
+            num, setbit = num // 2, setbit + num % 2
+        setbits.append(setbit)
+    setbits.sort()
+    
+    rval = 0
+    n = j = len(setbits)
+    for i in range(n):
+        while j > 0 and setbits[j-1] + setbits[i] >= k:
+            j -= 1
+        rval += n - j
+    
+    return rval
+
+def countExcellentPairs(self, nums: List[int], k: int) -> int:
+    '''
+    setbit(num1 & num2) + setbit(num1 | num2) = setbit(num1) + setbit(num2)
+    '''
+    
+    # require python 3.10
+    setbits = sorted(map(int.bit_count, set(nums)))  # type: ignore
+    
+    rval = 0
+    n = j = len(setbits)
+    for i in range(n):
+        while j > 0 and setbits[j-1] + setbits[i] >= k:
+            j -= 1
+        rval += n - j
+    
+    return rval
