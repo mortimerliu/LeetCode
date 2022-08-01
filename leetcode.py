@@ -5,6 +5,7 @@ from itertools import accumulate
 from math import gcd
 from operator import itemgetter
 from collections import Counter, defaultdict, deque
+import sys
 from typing import Dict, List, Optional, Tuple
 from sortedcontainers import SortedList
 
@@ -378,6 +379,85 @@ class MovingAverage:
         return self.total / len(self.deque)
 
 
+"""419. Battleships in a Board
+
+Given an `m x n` matrix `board` where each cell is a battleship `'X'` or 
+empty `'.'`, return *the number of the **battleships** on* `board`.
+
+**Battleships** can only be placed horizontally or vertically on `board`. 
+In other words, they can only be made of the shape `1 x k` (`1` row, `k` 
+columns) or `k x 1` (`k` rows, `1` column), where `k` can be of any size. 
+At least one horizontal or vertical cell separates between two battleships 
+(i.e., there are no adjacent battleships).
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/04/10/battelship-grid.jpg)
+
+```
+Input: board = [["X",".",".","X"],[".",".",".","X"],[".",".",".","X"]]
+Output: 2
+```
+
+**Example 2:**
+
+```
+Input: board = [["."]]
+Output: 0
+```
+
+
+**Constraints:**
+
+- `m == board.length`
+- `n == board[i].length`
+- `1 <= m, n <= 200`
+- `board[i][j]` is either `'.'` or `'X'`.
+
+
+**Follow up:** Could you do it in one-pass, using only `O(1)` extra memory and without modifying the values `board`?
+"""
+
+def countBattleships(board: List[List[str]]) -> int:  # type: ignore
+    """Regular DFS solution with modifying values in place"""
+    m, n = len(board), len(board[0])
+    
+    def dfs(i, j):
+        board[i][j] = '.'
+        for ni, nj in zip((i, i, i-1, i+1), (j-1, j+1, j, j)):
+            if 0 <= ni < m and 0 <= nj < n and board[ni][nj] == 'X':
+                dfs(ni, nj)
+                
+    rval = 0
+    for i in range(m):
+        for j in range(n):
+            if board[i][j] == 'X':
+                rval += 1
+                dfs(i, j)
+                
+    return rval
+
+def countBattleships(self, board: List[List[str]]) -> int:
+    """count the head of battleships
+    head is the cell with x, but the upper and left cells
+    without x
+    """
+    m, n = len(board), len(board[0])
+    
+    rval = 0
+    for i in range(m):
+        for j in range(n):
+            if (
+                board[i][j] == 'X' 
+                and (i == 0 or board[i-1][j] != 'X') 
+                and (j == 0 or board[i][j-1] != 'X')
+            ):
+                rval += 1
+                
+    return rval
+
+
 """498. Diagonal Traverse
 
 Given an `m x n` matrix `mat`, return *an array of all the elements of 
@@ -700,7 +780,6 @@ rangeModule.queryRange(16, 17); // return True, (The number 16 in [16, 17) is st
 - At most `104` calls will be made to `addRange`, `queryRange`, and `removeRange`.
 """
 
-
 class RangeModule:  # type: ignore
 
     def __init__(self):
@@ -771,6 +850,94 @@ class RangeModule:
 
     def removeRange(self, left: int, right: int) -> None:
         self.addRange(left, right, False)
+
+
+"""729. My Calendar I
+
+You are implementing a program to use as your calendar. We can add a new event if adding the event will not cause a **double booking**.
+
+A **double booking** happens when two events have some non-empty intersection (i.e., some moment is common to both events.).
+
+The event can be represented as a pair of integers `start` and `end` that represents a booking on the half-open interval `[start, end)`, the range of real numbers `x` such that `start <= x < end`.
+
+Implement the `MyCalendar` class:
+
+- `MyCalendar()` Initializes the calendar object.
+- `boolean book(int start, int end)` Returns `true` if the event can be added to the calendar successfully without causing a **double booking**. Otherwise, return `false` and do not add the event to the calendar.
+
+
+**Example 1:**
+
+```
+Input
+["MyCalendar", "book", "book", "book"]
+[[], [10, 20], [15, 25], [20, 30]]
+Output
+[null, true, false, true]
+
+Explanation
+MyCalendar myCalendar = new MyCalendar();
+myCalendar.book(10, 20); // return True
+myCalendar.book(15, 25); // return False, It can not be booked because time 15 is already booked by another event.
+myCalendar.book(20, 30); // return True, The event can be booked, as the first event takes every time less than 20, but not including 20.
+```
+
+
+**Constraints:**
+
+- `0 <= start < end <= 109`
+- At most `1000` calls will be made to `book`.
+"""
+
+class MyCalendar:  # type: ignore
+
+    def __init__(self):
+        self.records = SortedList()
+
+    def book(self, start: int, end: int) -> bool:
+        i = bisect.bisect_left(self.records, (start, end))
+        if (
+            (i == 0 or self.records[i-1][1] <= start) 
+            and (i == len(self.records) or self.records[i][0] >= end)
+        ):
+            self.records.add((start, end))
+            return True
+        return False
+    
+class TreeNode:  # type: ignore
+    
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+        self.left = None
+        self.right = None
+        
+    def insert(self, start, end):
+        if end <= self.start:
+            if self.left is None:
+                self.left = TreeNode(start, end)
+                return True
+            else:
+                return self.left.insert(start, end)
+        elif start >= self.end:
+            if self.right is None:
+                self.right = TreeNode(start, end)
+                return True
+            else:
+                return self.right.insert(start, end)
+        else:
+            return False
+
+class MyCalendar:
+
+    def __init__(self):
+        self.tree = None
+
+    def book(self, start: int, end: int) -> bool:
+        if self.tree is None:
+            self.tree = TreeNode(start, end)
+            return True
+        return self.tree.insert(start, end)
 
 
 """759. Employee Free Time
@@ -1203,7 +1370,68 @@ def earliestAcq(logs: List[List[int]], n: int) -> int:
         if union(a, b):
             return time
     return -1
+
+
+"""## 1376. Time Needed to Inform All Employees
+
+A company has `n` employees with a unique ID for each employee from `0` to `n - 1`. The head of the company is the one with `headID`.
+
+Each employee has one direct manager given in the `manager` array where `manager[i]` is the direct manager of the `i-th` employee, `manager[headID] = -1`. Also, it is guaranteed that the subordination relationships have a tree structure.
+
+The head of the company wants to inform all the company employees of an urgent piece of news. He will inform his direct subordinates, and they will inform their subordinates, and so on until all employees know about the urgent news.
+
+The `i-th` employee needs `informTime[i]` minutes to inform all of his direct subordinates (i.e., After informTime[i] minutes, all his direct subordinates can start spreading the news).
+
+Return *the number of minutes* needed to inform all the employees about the urgent news.
+
+
+**Example 1:**
+
+```
+Input: n = 1, headID = 0, manager = [-1], informTime = [0]
+Output: 0
+Explanation: The head of the company is the only employee in the company.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2020/02/27/graph.png)
+
+```
+Input: n = 6, headID = 2, manager = [2,2,-1,2,2,2], informTime = [0,0,1,0,0,0]
+Output: 1
+Explanation: The head of the company with id = 2 is the direct manager of all the employees in the company and needs 1 minute to inform them all.
+The tree structure of the employees in the company is shown.
+```
+
+
+**Constraints:**
+
+- `1 <= n <= 105`
+- `0 <= headID < n`
+- `manager.length == n`
+- `0 <= manager[i] < n`
+- `manager[headID] == -1`
+- `informTime.length == n`
+- `0 <= informTime[i] <= 1000`
+- `informTime[i] == 0` if employee `i` has no subordinates.
+- It is **guaranteed** that all the employees can be informed.
+"""
+
+def numOfMinutes(n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
     
+    adj_list = defaultdict(list)
+    for emp, mgr in enumerate(manager):
+        adj_list[mgr].append(emp)
+    
+    def dfs(i):
+        time = 0
+        for neigh in adj_list[i]:
+            time = max(time, dfs(neigh))
+        return time + informTime[i]
+    
+    return dfs(headID)
+
 
 """1411. Number of Ways to Paint N × 3 Grid
 
@@ -1402,6 +1630,167 @@ def maxLength(ribbons: List[int], k: int) -> int:
             hi = mid - 1
     
     return lo
+
+
+"""1996. The Number of Weak Characters in the Game
+
+You are playing a game that contains multiple characters, and each of the characters has **two** main properties: **attack** and **defense**. You are given a 2D integer array `properties` where `properties[i] = [attacki, defensei]` represents the properties of the `ith` character in the game.
+
+A character is said to be **weak** if any other character has **both** attack and defense levels **strictly greater** than this character's attack and defense levels. More formally, a character `i` is said to be **weak** if there exists another character `j` where `attackj > attacki` and `defensej > defensei`.
+
+Return *the number of **weak** characters*.
+
+
+**Example 1:**
+
+```
+Input: properties = [[5,5],[6,3],[3,6]]
+Output: 0
+Explanation: No character has strictly greater attack and defense than the other.
+```
+
+**Example 2:**
+
+```
+Input: properties = [[2,2],[3,3]]
+Output: 1
+Explanation: The first character is weak because the second character has a strictly greater attack and defense.
+```
+
+**Example 3:**
+
+```
+Input: properties = [[1,5],[10,4],[4,3]]
+Output: 1
+Explanation: The third character is weak because the second character has a strictly greater attack and defense.
+```
+
+
+**Constraints:**
+
+- `2 <= properties.length <= 105`
+- `properties[i].length == 2`
+- `1 <= attacki, defensei <= 105`
+"""
+
+def numberOfWeakCharacters(self, properties: List[List[int]]) -> int:  # type: ignore
+    # sort in ascending order of attack, but descending order of defense
+    # to deal with cases like [[1, 5], [1, 6]]
+    properties.sort(key=lambda x: (x[0], -x[1]))
+    count = 0
+    max_defense = 0
+    for attack, defense in properties[::-1]:
+        if defense < max_defense:
+            count += 1
+        max_defense = max(max_defense, defense)
+    
+    return count
+
+def numberOfWeakCharacters(self, properties: List[List[int]]) -> int:
+    # dp?
+    
+    # max attack values globally
+    max_attack = max([attack for attack, defense in properties])
+    
+    max_defenses = [0] * (max_attack + 2) 
+    
+    # max_defenses[i]: max defense value for all characters with attack == i
+    for attack, defense in properties:
+        max_defenses[attack] = max(max_defenses[attack], defense)
+        
+    # max_defenses[i]: max defense value for all characters with attack >= i
+    for i in range(max_attack, 0, -1):
+        max_defenses[i] = max(max_defenses[i], max_defenses[i+1])
+    
+    count = 0
+    for attack, defense in properties:
+        if defense < max_defenses[attack+1]:
+            count += 1
+    
+    return count
+
+
+"""2018. Check if Word Can Be Placed In Crossword
+
+You are given an `m x n` matrix `board`, representing the **current** 
+state of a crossword puzzle. The crossword contains lowercase English 
+letters (from solved words), `' '` to represent any **empty** cells, and 
+`'#'` to represent any **blocked** cells.
+
+A word can be placed **horizontally** (left to right **or** right to left) 
+or **vertically** (top to bottom **or** bottom to top) in the board if:
+
+- It does not occupy a cell containing the character `'#'`.
+- The cell each letter is placed in must either be `' '` (empty) or **match** the letter already on the `board`.
+- There must not be any empty cells `' '` or other lowercase letters **directly left or right** of the word if the word was placed **horizontally**.
+- There must not be any empty cells `' '` or other lowercase letters **directly above or below** the word if the word was placed **vertically**.
+
+Given a string `word`, return `true` *if* `word` *can be placed in* `board`*, or* `false` ***otherwise***.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/10/04/crossword-ex1-1.png)
+
+```
+Input: board = [["#", " ", "#"], [" ", " ", "#"], ["#", "c", " "]], word = "abc"
+Output: true
+Explanation: The word "abc" can be placed as shown above (top to bottom).
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/10/04/crossword-ex2-1.png)
+
+```
+Input: board = [[" ", "#", "a"], [" ", "#", "c"], [" ", "#", "a"]], word = "ac"
+Output: false
+Explanation: It is impossible to place the word because there will always be a space/letter above or below it.
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2021/10/04/crossword-ex3-1.png)
+
+```
+Input: board = [["#", " ", "#"], [" ", " ", "#"], ["#", " ", "c"]], word = "ca"
+Output: true
+Explanation: The word "ca" can be placed as shown above (right to left). 
+```
+
+
+**Constraints:**
+
+- `m == board.length`
+- `n == board[i].length`
+- `1 <= m * n <= 2 * 105`
+- `board[i][j]` will be `' '`, `'#'`, or a lowercase English letter.
+- `1 <= word.length <= max(m, n)`
+- `word` will contain only lowercase English letters.
+"""
+
+def placeWordInCrossword(board: List[List[str]], word: str) -> bool:
+    m, n, k = len(board), len(board[0]), len(word)
+    
+    def isBoundry(x, y):
+        return x < 0 or x >= m or y < 0 or y >= n or board[x][y] == '#'
+        
+    def isValid(i, x, y):
+        return board[x][y] in (' ', word[i])
+    
+    def dfs(i, x, y, dx, dy):
+        if i == k:
+            return isBoundry(x, y)
+        if 0 <= x < m and 0 <= y < n and isValid(i, x, y):
+            return dfs(i+1, x+dx, y+dy, dx, dy)
+        return False
+    
+    for x in range(m):
+        for y in range(n):
+            for dx, dy in zip((0, 0, 1, -1), (1, -1, 0, 0)):
+                if isBoundry(x-dx, y-dy) and dfs(0, x, y, dx, dy):
+                    return True
+    return False
 
 
 """2060. Check if an Original String Exists Given Two Encoded Strings
@@ -2043,6 +2432,104 @@ def amountPainted(paint: List[List[int]]) -> List[int]:
         last_idx = idx
             
     return rval
+
+
+"""2162. Minimum Cost to Set Cooking Time
+
+A generic microwave supports cooking times for:
+
+- at least `1` second.
+- at most `99` minutes and `99` seconds.
+
+To set the cooking time, you push **at most four digits**. The microwave normalizes what you push as four digits by **prepending zeroes**. It interprets the **first** two digits as the minutes and the **last** two digits as the seconds. It then **adds** them up as the cooking time. For example,
+
+- You push `9` `5` `4` (three digits). It is normalized as `0954` and interpreted as `9` minutes and `54` seconds.
+- You push `0` `0` `0` `8` (four digits). It is interpreted as `0` minutes and `8` seconds.
+- You push `8` `0` `9` `0`. It is interpreted as `80` minutes and `90` seconds.
+- You push `8` `1` `3` `0`. It is interpreted as `81` minutes and `30` seconds.
+
+You are given integers `startAt`, `moveCost`, `pushCost`, and `targetSeconds`. **Initially**, your finger is on the digit `startAt`. Moving the finger above **any specific digit** costs `moveCost` units of fatigue. Pushing the digit below the finger **once** costs `pushCost` units of fatigue.
+
+There can be multiple ways to set the microwave to cook for `targetSeconds` seconds but you are interested in the way with the minimum cost.
+
+Return *the **minimum cost** to set* `targetSeconds` *seconds of cooking time*.
+
+Remember that one minute consists of `60` seconds.
+
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/12/30/1.png)
+
+```
+Input: startAt = 1, moveCost = 2, pushCost = 1, targetSeconds = 600
+Output: 6
+Explanation: The following are the possible ways to set the cooking time.
+- 1 0 0 0, interpreted as 10 minutes and 0 seconds.
+  The finger is already on digit 1, pushes 1 (with cost 1), moves to 0 (with cost 2), pushes 0 (with cost 1), pushes 0 (with cost 1), and pushes 0 (with cost 1).
+  The cost is: 1 + 2 + 1 + 1 + 1 = 6. This is the minimum cost.
+- 0 9 6 0, interpreted as 9 minutes and 60 seconds. That is also 600 seconds.
+  The finger moves to 0 (with cost 2), pushes 0 (with cost 1), moves to 9 (with cost 2), pushes 9 (with cost 1), moves to 6 (with cost 2), pushes 6 (with cost 1), moves to 0 (with cost 2), and pushes 0 (with cost 1).
+  The cost is: 2 + 1 + 2 + 1 + 2 + 1 + 2 + 1 = 12.
+- 9 6 0, normalized as 0960 and interpreted as 9 minutes and 60 seconds.
+  The finger moves to 9 (with cost 2), pushes 9 (with cost 1), moves to 6 (with cost 2), pushes 6 (with cost 1), moves to 0 (with cost 2), and pushes 0 (with cost 1).
+  The cost is: 2 + 1 + 2 + 1 + 2 + 1 = 9.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/12/30/2.png)
+
+```
+Input: startAt = 0, moveCost = 1, pushCost = 2, targetSeconds = 76
+Output: 6
+Explanation: The optimal way is to push two digits: 7 6, interpreted as 76 seconds.
+The finger moves to 7 (with cost 1), pushes 7 (with cost 2), moves to 6 (with cost 1), and pushes 6 (with cost 2). The total cost is: 1 + 2 + 1 + 2 = 6
+Note other possible ways are 0076, 076, 0116, and 116, but none of them produces the minimum cost.
+```
+
+
+**Constraints:**
+
+- `0 <= startAt <= 9`
+- `1 <= moveCost, pushCost <= 105`
+- `1 <= targetSeconds <= 6039`
+"""
+
+def minCostSetTime(startAt: int, moveCost: int, pushCost: int, targetSeconds: int) -> int:  # type: ignore
+    candidates = []
+    if targetSeconds < 6000:
+        candidates.append((targetSeconds // 60, targetSeconds % 60))
+    if targetSeconds >= 60 and targetSeconds % 60 < 40:
+        candidates.append((targetSeconds // 60 - 1, targetSeconds % 60 + 60))
+        
+    rval = sys.maxsize
+    for m, s in candidates:
+        string = f'{m}{s:02d}' if m > 0 else str(s)
+        prev = str(startAt)
+        cost = 0
+        for c in string:
+            if prev != c:
+                cost += moveCost
+            prev = c
+            cost += pushCost
+        rval = min(rval, cost)
+    return rval
+
+def minCostSetTime(startAt: int, moveCost: int, pushCost: int, targetSeconds: int) -> int:
+    # better handling the edge cases
+    def getCost(m, s):
+        if min(m, s) < 0 or max(m, s) > 99:
+            return sys.maxsize
+        prev = str(startAt)
+        cost = 0
+        for c in str(m * 100 + s):
+            cost += moveCost * int(prev != c) + pushCost
+            prev = c
+        return cost
+    
+    m, s = targetSeconds // 60, targetSeconds % 60    
+    return min(getCost(m, s), getCost(m-1, s+60))
 
 
 """2178. Maximum Split of Positive Even Integers
