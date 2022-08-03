@@ -1210,6 +1210,93 @@ def customSortString(self, order: str, s: str) -> str:
     return ''.join(ordered)
 
 
+"""900. RLE Iterator
+
+We can use run-length encoding (i.e., **RLE**) to encode a sequence of integers. In a run-length encoded array of even length `encoding` (**0-indexed**), for all even `i`, `encoding[i]` tells us the number of times that the non-negative integer value `encoding[i + 1]` is repeated in the sequence.
+
+- For example, the sequence `arr = [8,8,8,5,5]` can be encoded to be `encoding = [3,8,2,5]`. `encoding = [3,8,0,9,2,5]` and `encoding = [2,8,1,8,2,5]` are also valid **RLE** of `arr`.
+
+Given a run-length encoded array, design an iterator that iterates through it.
+
+Implement the `RLEIterator` class:
+
+- `RLEIterator(int[] encoded)` Initializes the object with the encoded array `encoded`.
+- `int next(int n)` Exhausts the next `n` elements and returns the last element exhausted in this way. If there is no element left to exhaust, return `-1` instead.
+
+
+**Example 1:**
+
+```
+Input
+["RLEIterator", "next", "next", "next", "next"]
+[[[3, 8, 0, 9, 2, 5]], [2], [1], [1], [2]]
+Output
+[null, 8, 8, 5, -1]
+
+Explanation
+RLEIterator rLEIterator = new RLEIterator([3, 8, 0, 9, 2, 5]); // This maps to the sequence [8,8,8,5,5].
+rLEIterator.next(2); // exhausts 2 terms of the sequence, returning 8. The remaining sequence is now [8, 5, 5].
+rLEIterator.next(1); // exhausts 1 term of the sequence, returning 8. The remaining sequence is now [5, 5].
+rLEIterator.next(1); // exhausts 1 term of the sequence, returning 5. The remaining sequence is now [5].
+rLEIterator.next(2); // exhausts 2 terms, returning -1. This is because the first term exhausted was 5,
+but the second term did not exist. Since the last term exhausted does not exist, we return -1.
+```
+
+
+**Constraints:**
+
+- `2 <= encoding.length <= 1000`
+- `encoding.length` is even.
+- `0 <= encoding[i] <= 109`
+- `1 <= n <= 109`
+- At most `1000` calls will be made to `next`.
+"""
+ 
+class RLEIterator:  # type: ignore
+
+    def __init__(self, encoding: List[int]):
+        self.encoding = encoding
+        self.i = 0
+        self.exhausted = 0 # avoid modify encoding inplace
+
+    def next(self, n: int) -> int:
+        while self.i < len(self.encoding) and n > 0:
+            if n >= self.encoding[self.i] - self.exhausted:
+                n -= self.encoding[self.i] - self.exhausted
+                self.exhausted = 0
+                self.i += 2
+            else:
+                self.exhausted += n
+                n = 0
+        if self.i == len(self.encoding) and n > 0: 
+            return -1
+        if self.exhausted == 0:
+            return self.encoding[self.i-1]
+        return self.encoding[self.i+1]
+class RLEIterator:
+
+    def __init__(self, encoding: List[int]):
+        # space can be O(1) by modifying the array in place
+        self.encoding = encoding
+        for i in range(2, len(encoding), 2):
+            self.encoding[i] += self.encoding[i-2]
+        self.exhaust = 0
+        self.low = 0
+        
+    def next(self, n: int) -> int:
+        self.exhaust += n
+        l, r = self.low, len(self.encoding) // 2
+        while l < r:
+            mid = (l + r) // 2
+            if self.encoding[mid * 2] >= self.exhaust:
+                r = mid
+            else:
+                l = mid + 1
+        if l == len(self.encoding) // 2:
+            return -1
+        return self.encoding[l * 2 + 1]
+
+
 """939. Minimum Area Rectangle
 
 You are given an array of points in the **X-Y** plane `points` where 
@@ -2530,6 +2617,109 @@ def minCostSetTime(startAt: int, moveCost: int, pushCost: int, targetSeconds: in
     
     m, s = targetSeconds // 60, targetSeconds % 60    
     return min(getCost(m, s), getCost(m-1, s+60))
+
+
+"""2172. Maximum AND Sum of Array
+
+You are given an integer array `nums` of length `n` and an integer `numSlots` such that `2 * numSlots >= n`. There are `numSlots` slots numbered from `1` to `numSlots`.
+
+You have to place all `n` integers into the slots such that each slot contains at **most** two numbers. The **AND sum** of a given placement is the sum of the **bitwise** `AND` of every number with its respective slot number.
+
+- For example, the **AND sum** of placing the numbers `[1, 3]` into slot `1` and `[4, 6]` into slot `2` is equal to `(1 AND 1) + (3 AND 1) + (4 AND 2) + (6 AND 2) = 1 + 1 + 0 + 2 = 4`.
+
+Return *the maximum possible **AND sum** of* `nums` *given* `numSlots` *slots.*
+
+
+**Example 1:**
+
+```
+Input: nums = [1,2,3,4,5,6], numSlots = 3
+Output: 9
+Explanation: One possible placement is [1, 4] into slot 1, [2, 6] into slot 2, and [3, 5] into slot 3. 
+This gives the maximum AND sum of (1 AND 1) + (4 AND 1) + (2 AND 2) + (6 AND 2) + (3 AND 3) + (5 AND 3) = 1 + 0 + 2 + 2 + 3 + 1 = 9.
+```
+
+**Example 2:**
+
+```
+Input: nums = [1,3,10,4,7,1], numSlots = 9
+Output: 24
+Explanation: One possible placement is [1, 1] into slot 1, [3] into slot 3, [4] into slot 4, [7] into slot 7, and [10] into slot 9.
+This gives the maximum AND sum of (1 AND 1) + (1 AND 1) + (3 AND 3) + (4 AND 4) + (7 AND 7) + (10 AND 9) = 1 + 1 + 3 + 4 + 7 + 8 = 24.
+Note that slots 2, 5, 6, and 8 are empty which is permitted.
+```
+
+
+**Constraints:**
+
+- `n == nums.length`
+- `1 <= numSlots <= 9`
+- `1 <= n <= 2 * numSlots`
+- `1 <= nums[i] <= 15`
+"""
+
+def maximumANDSum(nums: List[int], numSlots: int) -> int:  # type: ignore
+    """Backtrack - TLE"""
+    n = len(nums)
+    slot_count = [0] * (numSlots + 1) # 1-indexed
+    max_sum = 0
+    def backtrack(i, cur_sum):
+        nonlocal max_sum
+        if i == n:
+            max_sum = max(max_sum, cur_sum)
+        else:
+            for slot in range(1, numSlots + 1):
+                if slot_count[slot] < 2:
+                    slot_count[slot] += 1
+                    backtrack(i+1, cur_sum + (nums[i] & slot))
+                    slot_count[slot] -= 1
+
+    backtrack(0, 0)
+    return max_sum
+
+def maximumANDSum(nums: List[int], numSlots: int) -> int:  # type: ignore
+    """DP with binary mask - we need two bits for each slot"""
+    n = len(nums)
+    slot_count = 0
+    
+    @lru_cache(maxsize=None)
+    def backtrack(i, slot_count):
+        if i == n:
+            return 0
+        max_sum = 0
+        for slot in range(1, numSlots + 1):
+            first = slot_count & (1 << (slot * 2 - 1)) == 0
+            second = slot_count & (1 << (slot * 2)) == 0
+            if first or second:
+                if first:
+                    bit = 1 << (slot * 2 - 1)
+                else:
+                    bit = 1 << (slot * 2)
+                slot_sum = (nums[i] & slot) + backtrack(i+1, bit | slot_count)
+                max_sum = max(slot_sum, max_sum)
+        return max_sum
+
+    return backtrack(0, 0)
+    
+def maximumANDSum(nums: List[int], numSlots: int) -> int:
+    """DP with Base 3 mask - eliminate if else"""
+    n = len(nums)
+    slot_count = 0 # ternary
+    
+    @lru_cache(maxsize=None)
+    def dp(i, slot_count):
+        if i == n: return 0
+        max_sum = 0
+        for slot in range(1, numSlots + 1):
+            # to get n-th digit in base-N system
+            # num // N ** n % N
+            bit = 3 ** slot
+            if slot_count // bit % 3 < 2:
+                slot_sum = (nums[i] & slot) + dp(i+1, slot_count + bit)
+                max_sum = max(slot_sum, max_sum)
+        return max_sum
+
+    return dp(0, 0)
 
 
 """2178. Maximum Split of Positive Even Integers
