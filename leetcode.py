@@ -2,6 +2,7 @@ import bisect
 from functools import lru_cache
 import heapq
 from itertools import accumulate
+import itertools
 from math import gcd
 from operator import itemgetter
 from collections import Counter, defaultdict, deque
@@ -1334,7 +1335,7 @@ Output: 2
 - All the given points are **unique**.
 """
 
-def minAreaRect(points: List[List[int]]) -> int:
+def minAreaRect(points: List[List[int]]) -> int:  # type: ignore
     points_by_x = defaultdict(set)
     for x, y in points:
         points_by_x[x].add(y)
@@ -1371,6 +1372,113 @@ def minAreaRect(self, points: List[List[int]]) -> int:
         seen.add((x1, y1))
     
     return rval if rval < float('inf') else 0  # type: ignore
+
+
+"""975. Odd Even Jump
+
+You are given an integer array `arr`. From some starting index, you can make a series of jumps. The (1st, 3rd, 5th, ...) jumps in the series are called **odd-numbered jumps**, and the (2nd, 4th, 6th, ...) jumps in the series are called **even-numbered jumps**. Note that the **jumps** are numbered, not the indices.
+
+You may jump forward from index `i` to index `j` (with `i < j`) in the following way:
+
+- During **odd-numbered jumps** (i.e., jumps 1, 3, 5, ...), you jump to the index `j` such that `arr[i] <= arr[j]` and `arr[j]` is the smallest possible value. If there are multiple such indices `j`, you can only jump to the **smallest** such index `j`.
+- During **even-numbered jumps** (i.e., jumps 2, 4, 6, ...), you jump to the index `j` such that `arr[i] >= arr[j]` and `arr[j]` is the largest possible value. If there are multiple such indices `j`, you can only jump to the **smallest** such index `j`.
+- It may be the case that for some index `i`, there are no legal jumps.
+
+A starting index is **good** if, starting from that index, you can reach the end of the array (index `arr.length - 1`) by jumping some number of times (possibly 0 or more than once).
+
+Return *the number of **good** starting indices*.
+
+
+**Example 1:**
+
+```
+Input: arr = [10,13,12,14,15]
+Output: 2
+Explanation: 
+From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
+From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
+From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
+From starting index i = 4, we have reached the end already.
+In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
+jumps.
+```
+
+**Example 2:**
+
+```
+Input: arr = [2,3,1,1,4]
+Output: 3
+Explanation: 
+From starting index i = 0, we make jumps to i = 1, i = 2, i = 3:
+During our 1st jump (odd-numbered), we first jump to i = 1 because arr[1] is the smallest value in [arr[1], arr[2], arr[3], arr[4]] that is greater than or equal to arr[0].
+During our 2nd jump (even-numbered), we jump from i = 1 to i = 2 because arr[2] is the largest value in [arr[2], arr[3], arr[4]] that is less than or equal to arr[1]. arr[3] is also the largest value, but 2 is a smaller index, so we can only jump to i = 2 and not i = 3
+During our 3rd jump (odd-numbered), we jump from i = 2 to i = 3 because arr[3] is the smallest value in [arr[3], arr[4]] that is greater than or equal to arr[2].
+We can't jump from i = 3 to i = 4, so the starting index i = 0 is not good.
+In a similar manner, we can deduce that:
+From starting index i = 1, we jump to i = 4, so we reach the end.
+From starting index i = 2, we jump to i = 3, and then we can't jump anymore.
+From starting index i = 3, we jump to i = 4, so we reach the end.
+From starting index i = 4, we are already at the end.
+In total, there are 3 different starting indices i = 1, i = 3, and i = 4, where we can reach the end with some
+number of jumps.
+```
+
+**Example 3:**
+
+```
+Input: arr = [5,1,3,4,2]
+Output: 3
+Explanation: We can reach the end from starting indices 1, 2, and 4.
+```
+
+
+**Constraints:**
+
+- `1 <= arr.length <= 2 * 104`
+- `0 <= arr[i] < 105`
+"""
+
+def oddEvenJumps(self, arr: List[int]) -> int:  # type: ignore
+    # sorted list
+    n = len(arr)
+    odd = [True] * n
+    even = [True] * n
+    odd_list = SortedList([(arr[n-1], n-1)])
+    even_list = SortedList([(arr[n-1], 1-n)])
+    
+    for i in range(n-2, -1, -1):
+        odd_idx = bisect.bisect_left(odd_list, arr[i], key=lambda x: x[0])
+        odd[i] = (odd_idx < len(odd_list) and even[odd_list[odd_idx][1]])
+        odd_list.add((arr[i], i))
+        
+        even_idx = bisect(even_list, arr[i], key=lambda x: x[0])  # type: ignore
+        even[i] = (even_idx > 0 and odd[-even_list[even_idx-1][1]])
+        even_list.add((arr[i], -i))
+        
+    return sum(odd)
+
+def oddEvenJumps(self, A):
+    n = len(A)
+    next_higher, next_lower = [0] * n, [0] * n
+
+    stack = []
+    for a, i in sorted([a, i] for i, a in enumerate(A)):
+        while stack and stack[-1] < i:
+            next_higher[stack.pop()] = i
+        stack.append(i)
+
+    stack = []
+    for a, i in sorted([-a, i] for i, a in enumerate(A)):
+        while stack and stack[-1] < i:
+            next_lower[stack.pop()] = i
+        stack.append(i)
+
+    higher, lower = [0] * n, [0] * n
+    higher[-1] = lower[-1] = 1
+    for i in range(n - 1)[::-1]:
+        higher[i] = lower[next_higher[i]]
+        lower[i] = higher[next_lower[i]]
+    return sum(higher)
     
 
 """1101. The Earliest Moment When Everyone Become Friends
@@ -2772,6 +2880,79 @@ Note that [10,2,4,12], [6,2,4,16], etc. are also accepted.
 
 - `1 <= finalSum <= 1010`
 """
+
+
+"""2242. Maximum Score of a Node Sequence
+
+There is an **undirected** graph with `n` nodes, numbered from `0` to `n - 1`.
+
+You are given a **0-indexed** integer array `scores` of length `n` where `scores[i]` denotes the score of node `i`. You are also given a 2D integer array `edges` where `edges[i] = [ai, bi]` denotes that there exists an **undirected** edge connecting nodes `ai` and `bi`.
+
+A node sequence is **valid** if it meets the following conditions:
+
+- There is an edge connecting every pair of **adjacent** nodes in the sequence.
+- No node appears more than once in the sequence.
+
+The score of a node sequence is defined as the **sum** of the scores of the nodes in the sequence.
+
+Return *the **maximum score** of a valid node sequence with a length of* `4`*.* If no such sequence exists, return `-1`.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2022/04/15/ex1new3.png)
+
+```
+Input: scores = [5,2,9,8,4], edges = [[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]
+Output: 24
+Explanation: The figure above shows the graph and the chosen node sequence [0,1,2,3].
+The score of the node sequence is 5 + 2 + 9 + 8 = 24.
+It can be shown that no other node sequence has a score of more than 24.
+Note that the sequences [3,1,2,0] and [1,0,2,3] are also valid and have a score of 24.
+The sequence [0,3,2,4] is not valid since no edge connects nodes 0 and 3.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2022/03/17/ex2.png)
+
+```
+Input: scores = [9,20,6,4,11,12], edges = [[0,3],[5,3],[2,4],[1,3]]
+Output: -1
+Explanation: The figure above shows the graph.
+There are no valid node sequences of length 4, so we return -1.
+```
+
+ 
+
+**Constraints:**
+
+- `n == scores.length`
+- `4 <= n <= 5 * 104`
+- `1 <= scores[i] <= 108`
+- `0 <= edges.length <= 5 * 104`
+- `edges[i].length == 2`
+- `0 <= ai, bi <= n - 1`
+- `ai != bi`
+- There are no duplicate edges.
+"""
+
+def maximumScore(self, scores, edges):
+    adj = [[] for _ in range(len(scores))]
+    for i, j in edges:
+        adj[i].append(j)
+        adj[j].append(i)
+    top = [heapq.nlargest(3, adj[i], scores.__getitem__) for i in range(len(scores))]
+    return max(
+        [
+            scores[a] + scores[b] + scores[c] + scores[d]
+            for a, b in edges
+            for c, d in itertools.product(top[a], top[b])
+            if len({a, b, c, d}) == 4
+        ],
+        default=-1,
+    )
 
 
 def maximumEvenSplit(finalSum: int) -> List[int]:
