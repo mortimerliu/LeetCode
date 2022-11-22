@@ -15,3 +15,9 @@ Will add new problems from weekly and biweekly contests once the contests are ov
 + [Weekly 295](https://leetcode.com/contest/weekly-contest-295)
 + [Weekly 302](https://leetcode.com/contest/weekly-contest-302)
 + [Weekly 303](https://leetcode.com/contest/weekly-contest-303)
+
+## Algorithms
+
+| # | Title | Solution | Difficulty |
+|---| ----- | -------- | ---------- |
+| 279 | [Perfect Squares](https://leetcode.com/problems/perfect-squares/) | [Java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/PerfectSquares.java), [Python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/PerfectSquares.py) | Medium |
