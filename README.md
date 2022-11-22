@@ -21,4 +21,5 @@ Will add new problems from weekly and biweekly contests once the contests are ov
 | # | Title | Solution | Difficulty |
 |---| ----- | -------- | ---------- |
 | 279 | [Perfect Squares](https://leetcode.com/problems/perfect-squares/) | [Java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/PerfectSquares.java), [Python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/PerfectSquares.py) | Medium |
+| 3 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | [Java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/LongestSubstringWithoutRepeatingCharacters.java), [Python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/LongestSubstringWithoutRepeatingCharacters.py) | Medium |
 | 2 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | [Java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/AddTwoNumbers.java), [Python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/AddTwoNumbers.py) | Medium |

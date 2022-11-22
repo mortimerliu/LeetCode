@@ -1,6 +1,5 @@
 package algorithms.java;
 
-import java.util.List;
 import algorithms.java.common.ListNode;
 
 /**
