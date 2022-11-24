@@ -34,10 +34,12 @@ from common import ListNode
 
 
 class Solution:
-    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+    def addTwoNumbers(
+        self, l1: Optional[ListNode], l2: Optional[ListNode]
+    ) -> Optional[ListNode]:
         carry = 0
         l3 = dummy = ListNode()
-        
+
         while l1 or l2 or carry:
             n1 = n2 = 0
             if l1:

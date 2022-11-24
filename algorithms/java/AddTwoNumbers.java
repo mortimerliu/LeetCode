@@ -5,10 +5,13 @@ import algorithms.java.common.ListNode;
 /**
  * [Medium] 2. Add Two Numbers
  * 
- * You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, 
- * and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+ * You are given two non-empty linked lists representing two non-negative
+ * integers. The digits are stored in reverse order,
+ * and each of their nodes contains a single digit. Add the two numbers and
+ * return the sum as a linked list.
  * 
- * You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+ * You may assume the two numbers do not contain any leading zero, except the
+ * number 0 itself.
  * 
  * Example 1:
  * 
@@ -29,7 +32,8 @@ import algorithms.java.common.ListNode;
  * 
  * * The number of nodes in each linked list is in the range [1, 100].
  * * 0 <= Node.val <= 9
- * * It is guaranteed that the list represents a number that does not have leading zeros.
+ * * It is guaranteed that the list represents a number that does not have
+ * leading zeros.
  *
  * @author Hongru Liu
  */
@@ -38,7 +42,7 @@ class Solution {
         int carry = 0;
         ListNode dummyNode = new ListNode();
         ListNode l3 = dummyNode;
-        
+
         while (l1 != null || l2 != null || carry != 0) {
             int n1 = 0;
             int n2 = 0;

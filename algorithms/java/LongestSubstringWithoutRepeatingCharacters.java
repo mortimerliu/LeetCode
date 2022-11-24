@@ -6,7 +6,8 @@ import java.util.Map;
 /**
  * [Medium] 3. Longest Substring Without Repeating Characters
  * 
- * Given a string s, find the length of the longest substring without repeating characters.
+ * Given a string s, find the length of the longest substring without repeating
+ * characters.
  * 
  * Example 1:
  * 
@@ -40,7 +41,7 @@ class Solution {
         Map<Character, Integer> lastIndex = new HashMap<>();
         int ans = 0;
         int start = -1;
-        
+
         for (int end = 0; end < s.length(); end++) {
             char cur = s.charAt(end);
             start = Math.max(start, lastIndex.getOrDefault(cur, -1));
