@@ -1,4 +1,4 @@
-package algorithms.java;
+package algorithms.java.medium;
 /*
  * @lc app=leetcode id=79 lang=java
  *
