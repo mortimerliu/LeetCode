@@ -70,7 +70,7 @@ class Solution:
         """
 
         """
-        Solution 2: group and check distance pairs using hashmap (find a 
+        Solution 2: group and check distance pairs using hashmap (find a
         candidate x first)
         """
         # if len(points) <= 1:

@@ -139,12 +139,12 @@ class Solution:
 
         """
         Solution 2: Priority Queue (Balanced BST)
-        
-        to find the smallest dry day, we can use priority queue to 
+
+        to find the smallest dry day, we can use priority queue to
         optimize the search speed:
         O(logn) for insert, delete and search
-        
-        There is no easy way to implement this in Python. See java implementation. 
+
+        There is no easy way to implement this in Python. See java implementation.
         """
 
 

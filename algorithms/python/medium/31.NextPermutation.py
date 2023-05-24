@@ -80,19 +80,19 @@ class Solution:
         Do not return anything, modify nums in-place instead.
         """
         """
-        Solution: 
-        Step 1: starting from end, find index i such that nums[i] is the 
+        Solution:
+        Step 1: starting from end, find index i such that nums[i] is the
         longest non-decreasing array
            i
         3, 4, 6, 5, 1
-        
+
         Step 2: from i+1 to n-1, find j: min(j) st. nums[j] > nums[i]
            i     j
         3, 4, 6, 5, 1
-        
+
         Step 3: modify inplace: swap i and j, sort nums[i+1:]
         3, 5, 6, 4, 1 -> 3, 5, 1, 4, 6
-        
+
         if nums is all non-decreasing, then it's the following case:
         [3,2,1] -> [1,2,3]
         """

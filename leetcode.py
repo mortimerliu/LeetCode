@@ -31,9 +31,9 @@ An **integer** can be split up into these components (in order):
 1. (Optional) A sign character (either `'+'` or `'-'`).
 2. One or more digits.
 
-For example, all the following are valid numbers: `["2", "0089", "-0.1", 
-"+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", 
-"-123.456e789"]`, while the following are not valid numbers: `["abc", 
+For example, all the following are valid numbers: `["2", "0089", "-0.1",
+"+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93",
+"-123.456e789"]`, while the following are not valid numbers: `["abc",
 "1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53"]`.
 
 Given a string `s`, return `true` *if* `s` *is a **valid number***.
@@ -59,7 +59,7 @@ Output: false
 Input: s = "."
 Output: false
 ```
- 
+
 
 **Constraints:**
 
@@ -108,9 +108,9 @@ def isNumber(s: str) -> bool:
 
 """125. Valid Palindrome
 
-A phrase is a palindrome if, after converting all uppercase letters into 
-lowercase letters and removing all non-alphanumeric characters, it reads 
-the same forward and backward. Alphanumeric characters include letters 
+A phrase is a palindrome if, after converting all uppercase letters into
+lowercase letters and removing all non-alphanumeric characters, it reads
+the same forward and backward. Alphanumeric characters include letters
 and numbers.
 
 Given a string s, return true if it is a palindrome, or false otherwise.
@@ -132,7 +132,7 @@ Input: s = " "
 Output: true
 Explanation: s is an empty string "" after removing non-alphanumeric characters.
 Since an empty string reads the same forward and backward, it is a palindrome.
- 
+
 
 Constraints:
 
@@ -159,10 +159,10 @@ def isPalindrome(self, s: str) -> bool:
 
 """246. Strobogrammatic Number
 
-Given a string `num` which represents an integer, return `true` *if* 
+Given a string `num` which represents an integer, return `true` *if*
 `num` *is a **strobogrammatic number***.
 
-A **strobogrammatic number** is a number that looks the same when 
+A **strobogrammatic number** is a number that looks the same when
 rotated `180` degrees (looked at upside down).
 
 
@@ -206,11 +206,11 @@ def isStrobogrammatic(num: str) -> bool:
 
 """329. Longest Increasing Path in a Matrix
 
-Given an `m x n` integers `matrix`, return *the length of the longest 
+Given an `m x n` integers `matrix`, return *the length of the longest
 increasing path in* `matrix`.
 
-From each cell, you can either move in four directions: left, right, up, 
-or down. You **may not** move **diagonally** or move **outside the 
+From each cell, you can either move in four directions: left, right, up,
+or down. You **may not** move **diagonally** or move **outside the
 boundary** (i.e., wrap-around is not allowed).
 
 
@@ -338,14 +338,14 @@ def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
 
 """346. Moving Average from Data Stream
 
-Given a stream of integers and a window size, calculate the moving 
+Given a stream of integers and a window size, calculate the moving
 average of all integers in the sliding window.
 
 Implement the MovingAverage class:
 
 * MovingAverage(int size) Initializes the object with the size of the window size.
 * double next(int val) Returns the moving average of the last size values of the stream.
- 
+
 
 Example 1:
 
@@ -361,7 +361,7 @@ movingAverage.next(1); // return 1.0 = 1 / 1
 movingAverage.next(10); // return 5.5 = (1 + 10) / 2
 movingAverage.next(3); // return 4.66667 = (1 + 10 + 3) / 3
 movingAverage.next(5); // return 6.0 = (10 + 3 + 5) / 3
- 
+
 
 Constraints:
 
@@ -387,13 +387,13 @@ class MovingAverage:
 
 """419. Battleships in a Board
 
-Given an `m x n` matrix `board` where each cell is a battleship `'X'` or 
+Given an `m x n` matrix `board` where each cell is a battleship `'X'` or
 empty `'.'`, return *the number of the **battleships** on* `board`.
 
-**Battleships** can only be placed horizontally or vertically on `board`. 
-In other words, they can only be made of the shape `1 x k` (`1` row, `k` 
-columns) or `k x 1` (`k` rows, `1` column), where `k` can be of any size. 
-At least one horizontal or vertical cell separates between two battleships 
+**Battleships** can only be placed horizontally or vertically on `board`.
+In other words, they can only be made of the shape `1 x k` (`1` row, `k`
+columns) or `k x 1` (`k` rows, `1` column), where `k` can be of any size.
+At least one horizontal or vertical cell separates between two battleships
 (i.e., there are no adjacent battleships).
 
 
@@ -468,10 +468,10 @@ def countBattleships(self, board: List[List[str]]) -> int:
 
 """498. Diagonal Traverse
 
-Given an `m x n` matrix `mat`, return *an array of all the elements of 
+Given an `m x n` matrix `mat`, return *an array of all the elements of
 the array in a diagonal order*.
 
- 
+
 **Example 1:**
 
 ![img](https://assets.leetcode.com/uploads/2021/04/10/diag1-grid.jpg)
@@ -488,7 +488,7 @@ Input: mat = [[1,2],[3,4]]
 Output: [1,2,3,4]
 ```
 
- 
+
 **Constraints:**
 
 - `m == mat.length`
@@ -542,8 +542,8 @@ def findDiagonalOrder(mat: List[List[int]]) -> List[int]:
 
 """539. Minimum Time Difference
 
-Given a list of 24-hour clock time points in **"HH:MM"** format, return 
-*the minimum **minutes** difference between any two time-points in the 
+Given a list of 24-hour clock time points in **"HH:MM"** format, return
+*the minimum **minutes** difference between any two time-points in the
 list*.
 
 
@@ -587,7 +587,7 @@ def findMinDifference(timePoints: List[str]) -> int:
 
 """562. Longest Line of Consecutive One in Matrix
 
-Given an `m x n` binary matrix `mat`, return *the length of the longest 
+Given an `m x n` binary matrix `mat`, return *the length of the longest
 line of consecutive one in the matrix*.
 
 The line could be horizontal, vertical, diagonal, or anti-diagonal.
@@ -662,18 +662,18 @@ def longestLine(self, mat: List[List[int]]) -> int:
 
 """708. Insert into a Sorted Circular Linked List
 
-Given a Circular Linked List node, which is sorted in ascending order, 
-write a function to insert a value `insertVal` into the list such that 
-it remains a sorted circular list. The given node can be a reference to 
-any single node in the list and may not necessarily be the smallest 
+Given a Circular Linked List node, which is sorted in ascending order,
+write a function to insert a value `insertVal` into the list such that
+it remains a sorted circular list. The given node can be a reference to
+any single node in the list and may not necessarily be the smallest
 value in the circular list.
 
-If there are multiple suitable places for insertion, you may choose any 
-place to insert the new value. After the insertion, the circular list 
+If there are multiple suitable places for insertion, you may choose any
+place to insert the new value. After the insertion, the circular list
 should remain sorted.
 
-If the list is empty (i.e., the given node is `null`), you should create 
-a new single circular list and return the reference to that single node. 
+If the list is empty (i.e., the given node is `null`), you should create
+a new single circular list and return the reference to that single node.
 Otherwise, you should return the originally given node.
 
 
@@ -701,7 +701,7 @@ Explanation: The list is empty (given head is null). We create a new single circ
 Input: head = [1], insertVal = 0
 Output: [1,0]
 ```
- 
+
 
 **Constraints:**
 
@@ -745,26 +745,26 @@ def insert(self, head: "Optional[Node]", insertVal: int) -> "Node":
 
 """715. Range Module
 
-A Range Module is a module that tracks ranges of numbers. Design a data 
-structure to track the ranges represented as **half-open intervals** and 
+A Range Module is a module that tracks ranges of numbers. Design a data
+structure to track the ranges represented as **half-open intervals** and
 query about them.
 
-A **half-open interval** `[left, right)` denotes all the real numbers 
+A **half-open interval** `[left, right)` denotes all the real numbers
 `x` where `left <= x < right`.
 
 Implement the `RangeModule` class:
 
 - `RangeModule()` Initializes the object of the data structure.
-- `void addRange(int left, int right)` Adds the **half-open interval** 
-`[left, right)`, tracking every real number in that interval. Adding an 
-interval that partially overlaps with currently tracked numbers should 
-add any numbers in the interval `[left, right)` that are not already 
+- `void addRange(int left, int right)` Adds the **half-open interval**
+`[left, right)`, tracking every real number in that interval. Adding an
+interval that partially overlaps with currently tracked numbers should
+add any numbers in the interval `[left, right)` that are not already
 tracked.
-- `boolean queryRange(int left, int right)` Returns `true` if every real 
-number in the interval `[left, right)` is currently being tracked, and 
+- `boolean queryRange(int left, int right)` Returns `true` if every real
+number in the interval `[left, right)` is currently being tracked, and
 `false` otherwise.
-- `void removeRange(int left, int right)` Stops tracking every real 
-number currently being tracked in the **half-open interval** 
+- `void removeRange(int left, int right)` Stops tracking every real
+number currently being tracked in the **half-open interval**
 `[left, right)`.
 
 
@@ -958,19 +958,19 @@ class MyCalendar:
 
 """759. Employee Free Time
 
-We are given a list `schedule` of employees, which represents the 
+We are given a list `schedule` of employees, which represents the
 working time for each employee.
 
-Each employee has a list of non-overlapping `Intervals`, and these 
+Each employee has a list of non-overlapping `Intervals`, and these
 intervals are in sorted order.
 
-Return the list of finite intervals representing **common, 
+Return the list of finite intervals representing **common,
 positive-length free time** for *all* employees, also in sorted order.
 
-(Even though we are representing `Intervals` in the form `[x, y]`, 
-the objects inside are `Intervals`, not lists or arrays. For example, 
-`schedule[0][0].start = 1`, `schedule[0][0].end = 2`, and 
-`schedule[0][0][0]` is not defined). Also, we wouldn't include intervals 
+(Even though we are representing `Intervals` in the form `[x, y]`,
+the objects inside are `Intervals`, not lists or arrays. For example,
+`schedule[0][0].start = 1`, `schedule[0][0].end = 2`, and
+`schedule[0][0][0]` is not defined). Also, we wouldn't include intervals
 like [5, 5] in our answer, as they have zero length.
 
 
@@ -1021,19 +1021,19 @@ def employeeFreeTime(self, schedule: List[List[Interval]]) -> List[Interval]:
 
 """778. Swim in Rising Water
 
-You are given an `n x n` integer matrix `grid` where each value 
+You are given an `n x n` integer matrix `grid` where each value
 `grid[i][j]` represents the elevation at that point `(i, j)`.
 
-The rain starts to fall. At time `t`, the depth of the water everywhere 
-is `t`. You can swim from a square to another 4-directionally adjacent 
-square if and only if the elevation of both squares individually are at 
-most `t`. You can swim infinite distances in zero time. Of course, you 
+The rain starts to fall. At time `t`, the depth of the water everywhere
+is `t`. You can swim from a square to another 4-directionally adjacent
+square if and only if the elevation of both squares individually are at
+most `t`. You can swim infinite distances in zero time. Of course, you
 must stay within the boundaries of the grid during your swim.
 
-Return *the least time until you can reach the bottom right square* 
+Return *the least time until you can reach the bottom right square*
 `(n - 1, n - 1)` *if you start at the top left square* `(0, 0)`.
 
- 
+
 **Example 1:**
 
 ![img](https://assets.leetcode.com/uploads/2021/06/29/swim1-grid.jpg)
@@ -1179,12 +1179,12 @@ def swimInWater(grid: List[List[int]]) -> int:
 
 """791. Custom Sort String
 
-You are given two strings order and s. All the words of `order` are 
+You are given two strings order and s. All the words of `order` are
 **unique** and were sorted in some custom order previously.
 
-Permute the characters of `s` so that they match the order that `order` 
-was sorted. More specifically, if a character `x` occurs before a 
-character `y` in `order`, then `x` should occur before `y` in the 
+Permute the characters of `s` so that they match the order that `order`
+was sorted. More specifically, if a character `x` occurs before a
+character `y` in `order`, then `x` should occur before `y` in the
 permuted string.
 
 Return *any permutation of* `s` *that satisfies this property*.
@@ -1195,8 +1195,8 @@ Return *any permutation of* `s` *that satisfies this property*.
 ```
 Input: order = "cba", s = "abcd"
 Output: "cbad"
-Explanation: 
-"a", "b", "c" appear in order, so the order of "a", "b", "c" should be "c", "b", and "a". 
+Explanation:
+"a", "b", "c" appear in order, so the order of "a", "b", "c" should be "c", "b", and "a".
 Since "d" does not appear in order, it can be at any position in the returned string. "dcba", "cdba", "cbda" are also valid outputs.
 ```
 
@@ -1323,11 +1323,11 @@ class RLEIterator:
 
 """939. Minimum Area Rectangle
 
-You are given an array of points in the **X-Y** plane `points` where 
+You are given an array of points in the **X-Y** plane `points` where
 `points[i] = [xi, yi]`.
 
-Return *the minimum area of a rectangle formed from these points, with 
-sides parallel to the X and Y axes*. If there is not any such rectangle, 
+Return *the minimum area of a rectangle formed from these points, with
+sides parallel to the X and Y axes*. If there is not any such rectangle,
 return `0`.
 
 
@@ -1419,7 +1419,7 @@ Return *the number of **good** starting indices*.
 ```
 Input: arr = [10,13,12,14,15]
 Output: 2
-Explanation: 
+Explanation:
 From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more.
 From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more.
 From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
@@ -1433,7 +1433,7 @@ jumps.
 ```
 Input: arr = [2,3,1,1,4]
 Output: 3
-Explanation: 
+Explanation:
 From starting index i = 0, we make jumps to i = 1, i = 2, i = 3:
 During our 1st jump (odd-numbered), we first jump to i = 1 because arr[1] is the smallest value in [arr[1], arr[2], arr[3], arr[4]] that is greater than or equal to arr[0].
 During our 2nd jump (even-numbered), we jump from i = 1 to i = 2 because arr[2] is the largest value in [arr[2], arr[3], arr[4]] that is less than or equal to arr[1]. arr[3] is also the largest value, but 2 is a smaller index, so we can only jump to i = 2 and not i = 3
@@ -1510,16 +1510,16 @@ def oddEvenJumps(self, A):
 
 """1101. The Earliest Moment When Everyone Become Friends
 
-There are n people in a social group labeled from `0` to `n - 1`. You 
-are given an array `logs` where `logs[i] = [timestampi, xi, yi]` 
+There are n people in a social group labeled from `0` to `n - 1`. You
+are given an array `logs` where `logs[i] = [timestampi, xi, yi]`
 indicates that `xi` and `yi` will be friends at the time `timestampi`.
 
-Friendship is **symmetric**. That means if `a` is friends with `b`, 
-then `b` is friends with `a`. Also, person `a` is acquainted with a 
-person `b` if `a` is friends with `b`, or `a` is a friend of someone 
+Friendship is **symmetric**. That means if `a` is friends with `b`,
+then `b` is friends with `a`. Also, person `a` is acquainted with a
+person `b` if `a` is friends with `b`, or `a` is a friend of someone
 acquainted with `b`.
 
-Return *the earliest time for which every person became acquainted with 
+Return *the earliest time for which every person became acquainted with
 every other person*. If there is no such earliest time, return `-1`.
 
 
@@ -1528,7 +1528,7 @@ every other person*. If there is no such earliest time, return `-1`.
 ```
 Input: logs = [[20190101,0,1],[20190104,3,4],[20190107,2,3],[20190211,1,5],[20190224,2,4],[20190301,0,3],[20190312,1,2],[20190322,4,5]], n = 6
 Output: 20190301
-Explanation: 
+Explanation:
 The first event occurs at timestamp = 20190101 and after 0 and 1 become friends we have the following friendship groups [0,1], [2], [3], [4], [5].
 The second event occurs at timestamp = 20190104 and after 3 and 4 become friends we have the following friendship groups [0,1], [2], [3,4], [5].
 The third event occurs at timestamp = 20190107 and after 2 and 3 become friends we have the following friendship groups [0,1], [2,3,4], [5].
@@ -1659,14 +1659,14 @@ def numOfMinutes(n: int, headID: int, manager: List[int], informTime: List[int])
 
 """1411. Number of Ways to Paint N × 3 Grid
 
-You have a `grid` of size `n x 3` and you want to paint each cell of the 
-grid with exactly one of the three colors: **Red**, **Yellow,** or 
-**Green** while making sure that no two adjacent cells have the same 
-color (i.e., no two cells that share vertical or horizontal sides have 
+You have a `grid` of size `n x 3` and you want to paint each cell of the
+grid with exactly one of the three colors: **Red**, **Yellow,** or
+**Green** while making sure that no two adjacent cells have the same
+color (i.e., no two cells that share vertical or horizontal sides have
 the same color).
 
-Given `n` the number of rows of the grid, return *the number of ways* 
-you can paint this `grid`. As the answer may grow large, the answer 
+Given `n` the number of rows of the grid, return *the number of ways*
+you can paint this `grid`. As the answer may grow large, the answer
 **must be** computed modulo `10^9 + 7`.
 
 
@@ -1717,16 +1717,16 @@ def numOfWays(n: int) -> int:
 
 """1423. Maximum Points You Can Obtain from Cards
 
-There are several cards **arranged in a row**, and each card has an 
-associated number of points. The points are given in the integer array 
+There are several cards **arranged in a row**, and each card has an
+associated number of points. The points are given in the integer array
 `cardPoints`.
 
-In one step, you can take one card from the beginning or from the end 
+In one step, you can take one card from the beginning or from the end
 of the row. You have to take exactly `k` cards.
 
 Your score is the sum of the points of the cards you have taken.
 
-Given the integer array `cardPoints` and the integer `k`, return the 
+Given the integer array `cardPoints` and the integer `k`, return the
 *maximum score* you can obtain.
 
 
@@ -1735,9 +1735,9 @@ Given the integer array `cardPoints` and the integer `k`, return the
 ```
 Input: cardPoints = [1,2,3,4,5,6,1], k = 3
 Output: 12
-Explanation: After the first step, your score will always be 1. However, 
-choosing the rightmost card first will maximize your total score. 
-The optimal strategy is to take the three cards on the right, giving 
+Explanation: After the first step, your score will always be 1. However,
+choosing the rightmost card first will maximize your total score.
+The optimal strategy is to take the three cards on the right, giving
 a final score of 1 + 6 + 5 = 12.
 ```
 
@@ -1777,9 +1777,9 @@ def maxScore(self, cardPoints: List[int], k: int) -> int:
 
 """1891. Cutting Ribbons
 
-You are given an integer array `ribbons`, where `ribbons[i]` represents 
-the length of the `ith` ribbon, and an integer `k`. You may cut any of 
-the ribbons into any number of segments of **positive integer** lengths, 
+You are given an integer array `ribbons`, where `ribbons[i]` represents
+the length of the `ith` ribbon, and an integer `k`. You may cut any of
+the ribbons into any number of segments of **positive integer** lengths,
 or perform no cuts at all.
 
 - For example, if you have a ribbon of length `4`, you can:
@@ -1789,12 +1789,12 @@ or perform no cuts at all.
   - Cut it into one ribbon of length `2` and two ribbons of length `1`, or
   - Cut it into four ribbons of length `1`.
 
-Your goal is to obtain `k` ribbons of all the **same positive integer 
-length**. You are allowed to throw away any excess ribbon as a result of 
+Your goal is to obtain `k` ribbons of all the **same positive integer
+length**. You are allowed to throw away any excess ribbon as a result of
 cutting.
 
-Return *the **maximum** possible positive integer length that you can 
-obtain* `k` *ribbons of**, or* `0` *if you cannot obtain* `k` *ribbons 
+Return *the **maximum** possible positive integer length that you can
+obtain* `k` *ribbons of**, or* `0` *if you cannot obtain* `k` *ribbons
 of the same length*.
 
 
@@ -1941,12 +1941,12 @@ def numberOfWeakCharacters(self, properties: List[List[int]]) -> int:
 
 """2018. Check if Word Can Be Placed In Crossword
 
-You are given an `m x n` matrix `board`, representing the **current** 
-state of a crossword puzzle. The crossword contains lowercase English 
-letters (from solved words), `' '` to represent any **empty** cells, and 
+You are given an `m x n` matrix `board`, representing the **current**
+state of a crossword puzzle. The crossword contains lowercase English
+letters (from solved words), `' '` to represent any **empty** cells, and
 `'#'` to represent any **blocked** cells.
 
-A word can be placed **horizontally** (left to right **or** right to left) 
+A word can be placed **horizontally** (left to right **or** right to left)
 or **vertically** (top to bottom **or** bottom to top) in the board if:
 
 - It does not occupy a cell containing the character `'#'`.
@@ -1984,7 +1984,7 @@ Explanation: It is impossible to place the word because there will always be a s
 ```
 Input: board = [["#", " ", "#"], [" ", " ", "#"], ["#", " ", "c"]], word = "ca"
 Output: true
-Explanation: The word "ca" can be placed as shown above (right to left). 
+Explanation: The word "ca" can be placed as shown above (right to left).
 ```
 
 
@@ -2025,30 +2025,30 @@ def placeWordInCrossword(board: List[List[str]], word: str) -> bool:
 
 """2060. Check if an Original String Exists Given Two Encoded Strings
 
-An original string, consisting of lowercase English letters, can be 
+An original string, consisting of lowercase English letters, can be
 encoded by the following steps:
 
-- Arbitrarily **split** it into a **sequence** of some number of 
+- Arbitrarily **split** it into a **sequence** of some number of
   **non-empty** substrings.
-- Arbitrarily choose some elements (possibly none) of the sequence, 
+- Arbitrarily choose some elements (possibly none) of the sequence,
   and **replace** each with **its length** (as a numeric string).
 - **Concatenate** the sequence as the encoded string.
 
-For example, **one way** to encode an original string 
+For example, **one way** to encode an original string
 `"abcdefghijklmnop"` might be:
 
 - Split it as a sequence: `["ab", "cdefghijklmn", "o", "p"]`.
-- Choose the second and third elements to be replaced by their lengths, 
+- Choose the second and third elements to be replaced by their lengths,
   respectively. The sequence becomes `["ab", "12", "1", "p"]`.
-- Concatenate the elements of the sequence to get the encoded string: 
+- Concatenate the elements of the sequence to get the encoded string:
   `"ab121p"`.
 
-Given two encoded strings `s1` and `s2`, consisting of lowercase English 
-letters and digits `1-9` (inclusive), return `true` *if there exists an 
-original string that could be encoded as **both*** `s1` *and* `s2`*. 
+Given two encoded strings `s1` and `s2`, consisting of lowercase English
+letters and digits `1-9` (inclusive), return `true` *if there exists an
+original string that could be encoded as **both*** `s1` *and* `s2`*.
 Otherwise, return* `false`.
 
-**Note**: The test cases are generated such that the number of 
+**Note**: The test cases are generated such that the number of
 consecutive digits in `s1` and `s2` does not exceed `3`.
 
 
@@ -2058,7 +2058,7 @@ consecutive digits in `s1` and `s2` does not exceed `3`.
 Input: s1 = "internationalization", s2 = "i18n"
 Output: true
 Explanation: It is possible that "internationalization" was the original string.
-- "internationalization" 
+- "internationalization"
   -> Split:       ["internationalization"]
   -> Do not replace any element
   -> Concatenate:  "internationalization", which is s1.
@@ -2074,11 +2074,11 @@ Explanation: It is possible that "internationalization" was the original string.
 Input: s1 = "l123e", s2 = "44"
 Output: true
 Explanation: It is possible that "leetcode" was the original string.
-- "leetcode" 
+- "leetcode"
   -> Split:      ["l", "e", "et", "cod", "e"]
   -> Replace:    ["l", "1", "2",  "3",   "e"]
   -> Concatenate: "l123e", which is s1.
-- "leetcode" 
+- "leetcode"
   -> Split:      ["leet", "code"]
   -> Replace:    ["4",    "4"]
   -> Concatenate: "44", which is s2.
@@ -2155,22 +2155,22 @@ def possiblyEquals(self, s1: str, s2: str) -> bool:
 
 """2096. Step-By-Step Directions From a Binary Tree Node to Another
 
-You are given the `root` of a **binary tree** with `n` nodes. Each node 
-is uniquely assigned a value from `1` to `n`. You are also given an 
-integer `startValue` representing the value of the start node `s`, and 
-a different integer `destValue` representing the value of the 
+You are given the `root` of a **binary tree** with `n` nodes. Each node
+is uniquely assigned a value from `1` to `n`. You are also given an
+integer `startValue` representing the value of the start node `s`, and
+a different integer `destValue` representing the value of the
 destination node `t`.
 
-Find the **shortest path** starting from node `s` and ending at node `t`. 
-Generate step-by-step directions of such path as a string consisting of 
-only the **uppercase** letters `'L'`, `'R'`, and `'U'`. Each letter 
+Find the **shortest path** starting from node `s` and ending at node `t`.
+Generate step-by-step directions of such path as a string consisting of
+only the **uppercase** letters `'L'`, `'R'`, and `'U'`. Each letter
 indicates a specific direction:
 
 - `'L'` means to go from a node to its **left child** node.
 - `'R'` means to go from a node to its **right child** node.
 - `'U'` means to go from a node to its **parent** node.
 
-Return *the step-by-step directions of the **shortest path** from node* 
+Return *the step-by-step directions of the **shortest path** from node*
 `s` *to node* `t`.
 
 
@@ -2250,18 +2250,18 @@ class Solution:
 
 """2115. Find All Possible Recipes from Given Supplies
 
-You have information about `n` different recipes. You are given a string 
-array `recipes` and a 2D string array `ingredients`. The `ith` recipe 
-has the name `recipes[i]`, and you can **create** it if you have **all** 
-the needed ingredients from `ingredients[i]`. Ingredients to a recipe 
-may need to be created from **other** recipes, i.e., `ingredients[i]` 
+You have information about `n` different recipes. You are given a string
+array `recipes` and a 2D string array `ingredients`. The `ith` recipe
+has the name `recipes[i]`, and you can **create** it if you have **all**
+the needed ingredients from `ingredients[i]`. Ingredients to a recipe
+may need to be created from **other** recipes, i.e., `ingredients[i]`
 may contain a string that is in `recipes`.
 
-You are also given a string array `supplies` containing all the 
-ingredients that you initially have, and you have an infinite supply of 
+You are also given a string array `supplies` containing all the
+ingredients that you initially have, and you have an infinite supply of
 all of them.
 
-Return *a list of all the recipes that you can create.* You may return 
+Return *a list of all the recipes that you can create.* You may return
 the answer in **any order**.
 
 Note that two recipes may contain each other in their ingredients.
@@ -2297,7 +2297,7 @@ We can create "sandwich" since we have the ingredient "meat" and can create the 
 We can create "burger" since we have the ingredient "meat" and can create the ingredients "bread" and "sandwich".
 ```
 
- 
+
 **Constraints:**
 
 - `n == recipes.length == ingredients.length`
@@ -2359,10 +2359,10 @@ def findAllRecipes(
 You are given an `m x n` binary matrix `grid`.
 
 In one operation, you can choose **any** row or column and flip each
-value in that row or column (i.e., changing all `0`'s to `1`'s, and 
+value in that row or column (i.e., changing all `0`'s to `1`'s, and
 all `1`'s to `0`'s).
 
-Return `true` *if it is possible to remove all* `1`*'s from* `grid` 
+Return `true` *if it is possible to remove all* `1`*'s from* `grid`
 using **any** number of operations or `false` otherwise.
 
 
@@ -2426,28 +2426,28 @@ def removeOnes(grid: List[List[int]]) -> bool:
 
 """2135. Count Words Obtained After Adding a Letter
 
-You are given two **0-indexed** arrays of strings `startWords` and 
+You are given two **0-indexed** arrays of strings `startWords` and
 `targetWords`. Each string consists of **lowercase English letters** only.
 
-For each string in `targetWords`, check if it is possible to choose a 
-string from `startWords` and perform a **conversion operation** on it 
+For each string in `targetWords`, check if it is possible to choose a
+string from `startWords` and perform a **conversion operation** on it
 to be equal to that from `targetWords`.
 
 The **conversion operation** is described in the following two steps:
 
 1. Append any lowercase letter that is not present in the string to its end.
-   - For example, if the string is `"abc"`, the letters `'d'`, `'e'`, 
-   or `'y'` can be added to it, but not `'a'`. If `'d'` is added, the 
+   - For example, if the string is `"abc"`, the letters `'d'`, `'e'`,
+   or `'y'` can be added to it, but not `'a'`. If `'d'` is added, the
    resulting string will be `"abcd"`.
 2. Rearrange the letters of the new string in any arbitrary order.
-   - For example, `"abcd"` can be rearranged to `"acbd"`, `"bacd"`, 
+   - For example, `"abcd"` can be rearranged to `"acbd"`, `"bacd"`,
    `"cbda"`, and so on. Note that it can also be rearranged to `"abcd"` itself.
 
-Return *the **number of strings** in* `targetWords` *that can be obtained 
+Return *the **number of strings** in* `targetWords` *that can be obtained
 by performing the operations on **any** string of* `startWords`.
 
-**Note** that you will only be verifying if the string in `targetWords` 
-can be obtained from a string in `startWords` by performing the operations. 
+**Note** that you will only be verifying if the string in `targetWords`
+can be obtained from a string in `startWords` by performing the operations.
 The strings in `startWords` **do not** actually change during this process.
 
 
@@ -2509,15 +2509,15 @@ def wordCount(startWords: List[str], targetWords: List[str]) -> int:
 
 """2158. Amount of New Area Painted Each Day
 
-There is a long and thin painting that can be represented by a number 
-line. You are given a **0-indexed** 2D integer array `paint` of length 
-`n`, where `paint[i] = [starti, endi]`. This means that on the `ith` day 
+There is a long and thin painting that can be represented by a number
+line. You are given a **0-indexed** 2D integer array `paint` of length
+`n`, where `paint[i] = [starti, endi]`. This means that on the `ith` day
 you need to paint the area **between** `starti` and `endi`.
 
-Painting the same area multiple times will create an uneven painting so 
+Painting the same area multiple times will create an uneven painting so
 you only want to paint each area of the painting at most **once**.
 
-Return *an integer array* `worklog` *of length* `n`*, where* `worklog[i]` 
+Return *an integer array* `worklog` *of length* `n`*, where* `worklog[i]`
 *is the amount of **new** area that you painted on the* `ith` *day.*
 
 
@@ -2535,7 +2535,7 @@ On day 1, paint everything between 4 and 7.
 The amount of new area painted on day 1 is 7 - 4 = 3.
 On day 2, paint everything between 7 and 8.
 Everything between 5 and 7 was already painted on day 1.
-The amount of new area painted on day 2 is 8 - 7 = 1. 
+The amount of new area painted on day 2 is 8 - 7 = 1.
 ```
 
 **Example 2:**
@@ -2552,7 +2552,7 @@ On day 1, paint everything between 5 and 8.
 The amount of new area painted on day 1 is 8 - 5 = 3.
 On day 2, paint everything between 4 and 5.
 Everything between 5 and 7 was already painted on day 1.
-The amount of new area painted on day 2 is 5 - 4 = 1. 
+The amount of new area painted on day 2 is 5 - 4 = 1.
 ```
 
 **Example 3:**
@@ -2786,7 +2786,7 @@ Return *the maximum possible **AND sum** of* `nums` *given* `numSlots` *slots.*
 ```
 Input: nums = [1,2,3,4,5,6], numSlots = 3
 Output: 9
-Explanation: One possible placement is [1, 4] into slot 1, [2, 6] into slot 2, and [3, 5] into slot 3. 
+Explanation: One possible placement is [1, 4] into slot 1, [2, 6] into slot 2, and [3, 5] into slot 3.
 This gives the maximum AND sum of (1 AND 1) + (4 AND 1) + (2 AND 2) + (6 AND 2) + (3 AND 3) + (5 AND 3) = 1 + 0 + 2 + 2 + 3 + 1 = 9.
 ```
 
@@ -2880,17 +2880,17 @@ def maximumANDSum(nums: List[int], numSlots: int) -> int:
 
 """2178. Maximum Split of Positive Even Integers
 
-You are given an integer `finalSum`. Split it into a sum of a **maximum** 
+You are given an integer `finalSum`. Split it into a sum of a **maximum**
 number of **unique** positive even integers.
 
-- For example, given `finalSum = 12`, the following splits are **valid** 
-(unique positive even integers summing up to `finalSum`): `(12)`, `(2 + 10)`, 
+- For example, given `finalSum = 12`, the following splits are **valid**
+(unique positive even integers summing up to `finalSum`): `(12)`, `(2 + 10)`,
 `(2 + 4 + 6)`, and `(4 + 8)`. Among them, `(2 + 4 + 6)` contains the
-maximum number of integers. Note that `finalSum` cannot be split into 
+maximum number of integers. Note that `finalSum` cannot be split into
 `(2 + 2 + 4 + 4)` as all the numbers should be unique.
 
-Return *a list of integers that represent a valid split containing a 
-**maximum** number of integers*. If no valid split exists for `finalSum`, 
+Return *a list of integers that represent a valid split containing a
+**maximum** number of integers*. If no valid split exists for `finalSum`,
 return *an **empty** list*. You may return the integers in **any** order.
 
 
@@ -2918,7 +2918,7 @@ Thus, we return an empty array.
 ```
 Input: finalSum = 28
 Output: [6,8,2,12]
-Explanation: The following are valid splits: (2 + 26), (6 + 8 + 2 + 12), and (4 + 24). 
+Explanation: The following are valid splits: (2 + 26), (6 + 8 + 2 + 12), and (4 + 24).
 (6 + 8 + 2 + 12) has the maximum number of integers, which is 4. Thus, we return [6,8,2,12].
 Note that [10,2,4,12], [6,2,4,16], etc. are also accepted.
 ```
@@ -2945,7 +2945,7 @@ The score of a node sequence is defined as the **sum** of the scores of the node
 
 Return *the **maximum score** of a valid node sequence with a length of* `4`*.* If no such sequence exists, return `-1`.
 
- 
+
 
 **Example 1:**
 
@@ -2972,7 +2972,7 @@ Explanation: The figure above shows the graph.
 There are no valid node sequences of length 4, so we return -1.
 ```
 
- 
+
 
 **Constraints:**
 
@@ -3031,12 +3031,12 @@ def maximumEvenSplit(finalSum: int) -> List[int]:
 
 You are given a string number representing a positive integer and a character digit.
 
-Return the resulting string after removing exactly one occurrence of 
-digit from number such that the value of the resulting string in decimal 
-form is maximized. The test cases are generated such that digit occurs 
+Return the resulting string after removing exactly one occurrence of
+digit from number such that the value of the resulting string in decimal
+form is maximized. The test cases are generated such that digit occurs
 at least once in number.
 
- 
+
 Example 1:
 
 Input: number = "123", digit = "3"
@@ -3054,7 +3054,7 @@ Input: number = "551", digit = "5"
 Output: "51"
 Explanation: We can remove either the first or second '5' from "551".
 Both result in the string "51".
- 
+
 
 Constraints:
 
@@ -3084,13 +3084,13 @@ def removeDigit(self, number: str, digit: str) -> str:
 """2260. Minimum Consecutive Cards to Pick Up
 
 You are given an integer array cards where cards[i] represents the value
-of the ith card. A pair of cards are matching if the cards have the same 
+of the ith card. A pair of cards are matching if the cards have the same
 value.
 
-Return the minimum number of consecutive cards you have to pick up to 
-have a pair of matching cards among the picked cards. If it is impossible 
+Return the minimum number of consecutive cards you have to pick up to
+have a pair of matching cards among the picked cards. If it is impossible
 to have matching cards, return -1.
- 
+
 
 Example 1:
 
@@ -3102,7 +3102,7 @@ Example 2:
 Input: cards = [1,0,5,3]
 Output: -1
 Explanation: There is no way to pick up a set of consecutive cards that contain a pair of matching cards.
- 
+
 
 Constraints:
 
@@ -3123,7 +3123,7 @@ def minimumCardPickup(self, cards: List[int]) -> int:
 
 """2261. K Divisible Elements Subarrays
 
-Given an integer array nums and two integers k and p, return the number 
+Given an integer array nums and two integers k and p, return the number
 of distinct subarrays which have at most k elements divisible by p.
 
 Two arrays nums1 and nums2 are said to be distinct if:
@@ -3131,7 +3131,7 @@ Two arrays nums1 and nums2 are said to be distinct if:
 They are of different lengths, or
 There exists at least one index i where nums1[i] != nums2[i].
 A subarray is defined as a non-empty contiguous sequence of elements in an array.
- 
+
 
 Example 1:
 
@@ -3151,7 +3151,7 @@ Explanation:
 All element of nums are divisible by p = 1.
 Also, every subarray of nums will have at most 4 elements that are divisible by 1.
 Since all subarrays are distinct, the total number of subarrays satisfying all the constraints is 10.
- 
+
 
 Constraints:
 
@@ -3187,13 +3187,13 @@ def countDistinct(self, nums: List[int], k: int, p: int) -> int:
 
 The appeal of a string is the number of distinct characters found in the string.
 
-For example, the appeal of "abbca" is 3 because it has 3 distinct 
+For example, the appeal of "abbca" is 3 because it has 3 distinct
 characters: 'a', 'b', and 'c'.
 
 Given a string s, return the total appeal of all of its substrings.
 
 A substring is a contiguous sequence of characters within a string.
- 
+
 
 Example 1:
 
@@ -3216,7 +3216,7 @@ Explanation: The following are the substrings of "code":
 - Substrings of length 3: "cod", "ode" have an appeal of 3 and 3 respectively. The sum is 6.
 - Substrings of length 4: "code" has an appeal of 4. The sum is 4.
 The total sum is 4 + 6 + 6 + 4 = 20.
- 
+
 
 Constraints:
 
@@ -3242,13 +3242,13 @@ def appealSum(self, s: str) -> int:
 
 """2264. Largest 3-Same-Digit Number in String
 
-You are given a string `num` representing a large integer. An integer is 
+You are given a string `num` representing a large integer. An integer is
 **good** if it meets the following conditions:
 
 - It is a **substring** of `num` with length `3`.
 - It consists of only one unique digit.
 
-Return *the **maximum good** integer as a **string** or an empty string* 
+Return *the **maximum good** integer as a **string** or an empty string*
 `""` *if no such integer exists*.
 
 Note:
@@ -3300,8 +3300,8 @@ def largestGoodInteger(num: str) -> str:
 
 """2265. Count Nodes Equal to Average of Subtree
 
-Given the `root` of a binary tree, return *the number of nodes where the 
-value of the node is equal to the **average** of the values in its 
+Given the `root` of a binary tree, return *the number of nodes where the
+value of the node is equal to the **average** of the values in its
 **subtree***.
 
 **Note:**
@@ -3317,7 +3317,7 @@ value of the node is equal to the **average** of the values in its
 ```
 Input: root = [4,8,5,0,1,null,6]
 Output: 5
-Explanation: 
+Explanation:
 For the node with value 4: The average of its subtree is (4 + 8 + 5 + 0 + 1 + 6) / 6 = 24 / 6 = 4.
 For the node with value 5: The average of its subtree is (5 + 6) / 2 = 11 / 2 = 5.
 For the node with value 0: The average of its subtree is 0 / 1 = 0.
@@ -3372,25 +3372,25 @@ def averageOfSubtree(root: Optional[TreeNode]) -> int:
 
 """2266. Count Number of Texts
 
-Alice is texting Bob using her phone. The **mapping** of digits to 
+Alice is texting Bob using her phone. The **mapping** of digits to
 letters is shown in the figure below.
 
 ![img](https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg.png)
 
-In order to **add** a letter, Alice has to **press** the key of the 
-corresponding digit `i` times, where `i` is the position of the letter 
+In order to **add** a letter, Alice has to **press** the key of the
+corresponding digit `i` times, where `i` is the position of the letter
 in the key.
 
 - For example, to add the letter `'s'`, Alice has to press `'7'` four times. Similarly, to add the letter `'k'`, Alice has to press `'5'` twice.
 - Note that the digits `'0'` and `'1'` do not map to any letters, so Alice **does not** use them.
 
-However, due to an error in transmission, Bob did not receive Alice's 
+However, due to an error in transmission, Bob did not receive Alice's
 text message but received a **string of pressed keys** instead.
 
 - For example, when Alice sent the message `"bob"`, Bob received the string `"2266622"`.
 
-Given a string `pressedKeys` representing the string received by Bob, 
-return *the **total number of possible text messages** Alice could have 
+Given a string `pressedKeys` representing the string received by Bob,
+return *the **total number of possible text messages** Alice could have
 sent*.
 
 Since the answer may be very large, return it **modulo** `109 + 7`.
@@ -3453,16 +3453,16 @@ def countTexts(self, pressedKeys: str) -> int:
 
 """2267. Check if There Is a Valid Parentheses String Path
 
-A parentheses string is a **non-empty** string consisting only of `'('` 
-and `')'`. It is **valid** if **any** of the following conditions is 
+A parentheses string is a **non-empty** string consisting only of `'('`
+and `')'`. It is **valid** if **any** of the following conditions is
 **true**:
 
 - It is `()`.
 - It can be written as `AB` (`A` concatenated with `B`), where `A` and `B` are valid parentheses strings.
 - It can be written as `(A)`, where `A` is a valid parentheses string.
 
-You are given an `m x n` matrix of parentheses `grid`. A **valid 
-parentheses string path** in the grid is a path satisfying **all** of 
+You are given an `m x n` matrix of parentheses `grid`. A **valid
+parentheses string path** in the grid is a path satisfying **all** of
 the following conditions:
 
 - The path starts from the upper left cell `(0, 0)`.
@@ -3470,7 +3470,7 @@ the following conditions:
 - The path only ever moves **down** or **right**.
 - The resulting parentheses string formed by the path is **valid**.
 
-Return `true` *if there exists a **valid parentheses string path** in 
+Return `true` *if there exists a **valid parentheses string path** in
 the grid.* Otherwise, return `false`.
 
 
@@ -3537,20 +3537,20 @@ def hasValidPath(self, grid: List[List[str]]) -> bool:
 
 """2273. Find Resultant Array After Removing Anagrams
 
-You are given a 0-indexed string array words, where words[i] consists of 
-lowercase English letters. 
+You are given a 0-indexed string array words, where words[i] consists of
+lowercase English letters.
 
-In one operation, select any index i such that 0 < i < words.length and 
-words[i - 1] and words[i] are anagrams, and delete words[i] from words. 
-Keep performing this operation as long as you can select an index that 
+In one operation, select any index i such that 0 < i < words.length and
+words[i - 1] and words[i] are anagrams, and delete words[i] from words.
+Keep performing this operation as long as you can select an index that
 satisfies the conditions.
 
-Return words after performing all operations. It can be shown that 
-selecting the indices for each operation in any arbitrary order will 
+Return words after performing all operations. It can be shown that
+selecting the indices for each operation in any arbitrary order will
 lead to the same result.
 
-An Anagram is a word or phrase formed by rearranging the letters of a 
-different word or phrase using all the original letters exactly once. 
+An Anagram is a word or phrase formed by rearranging the letters of a
+different word or phrase using all the original letters exactly once.
 For example, "dacb" is an anagram of "abdc".
 
 Example 1:
@@ -3572,7 +3572,7 @@ Input: words = ["a","b","c","d","e"]
 Output: ["a","b","c","d","e"]
 Explanation:
 No two adjacent strings in words are anagrams of each other, so no operations are performed.
- 
+
 
 Constraints:
 
@@ -3592,13 +3592,13 @@ def removeAnagrams(self, words: List[str]) -> List[str]:
 
 """2274. Maximum Consecutive Floors Without Special Floors
 
-Alice manages a company and has rented some floors of a building as 
-office space. Alice has decided some of these floors should be special 
+Alice manages a company and has rented some floors of a building as
+office space. Alice has decided some of these floors should be special
 floors, used for relaxation only.
 
-You are given two integers bottom and top, which denote that Alice has 
-rented all the floors from bottom to top (inclusive). You are also given 
-the integer array special, where special[i] denotes a special floor that 
+You are given two integers bottom and top, which denote that Alice has
+rented all the floors from bottom to top (inclusive). You are also given
+the integer array special, where special[i] denotes a special floor that
 Alice has designated for relaxation.
 
 Return the maximum number of consecutive floors without a special floor.
@@ -3617,7 +3617,7 @@ Example 2:
 Input: bottom = 6, top = 8, special = [7,6,8]
 Output: 0
 Explanation: Every floor rented is a special floor, so we return 0.
- 
+
 
 Constraints:
 
@@ -3643,11 +3643,11 @@ The bitwise AND of an array nums is the bitwise AND of all integers in nums.
 For example, for nums = [1, 5, 3], the bitwise AND is equal to 1 & 5 & 3 = 1.
 Also, for nums = [7], the bitwise AND is 7.
 
-You are given an array of positive integers candidates. Evaluate the 
-bitwise AND of every combination of numbers of candidates. Each number 
+You are given an array of positive integers candidates. Evaluate the
+bitwise AND of every combination of numbers of candidates. Each number
 in candidates may only be used once in each combination.
 
-Return the size of the largest combination of candidates with a bitwise 
+Return the size of the largest combination of candidates with a bitwise
 AND greater than 0.
 
 
@@ -3666,8 +3666,8 @@ Input: candidates = [8,8]
 Output: 2
 Explanation: The largest combination [8,8] has a bitwise AND of 8 & 8 = 8 > 0.
 The size of the combination is 2, so we return 2.
- 
- 
+
+
 Constraints:
 
 * 1 <= candidates.length <= 105
@@ -3714,7 +3714,7 @@ Output
 [null, null, null, 6, null, 8]
 
 Explanation
-CountIntervals countIntervals = new CountIntervals(); // initialize the object with an empty set of intervals. 
+CountIntervals countIntervals = new CountIntervals(); // initialize the object with an empty set of intervals.
 countIntervals.add(2, 3);  // add [2, 3] to the set of intervals.
 countIntervals.add(7, 10); // add [7, 10] to the set of intervals.
 countIntervals.count();    // return 6
@@ -3726,7 +3726,7 @@ countIntervals.count();    // return 8
                            // the integers 5 and 6 are present in the interval [5, 8].
                            // the integers 7 and 8 are present in the intervals [5, 8] and [7, 10].
                            // the integers 9 and 10 are present in the interval [7, 10].
- 
+
 
 Constraints:
 
@@ -3763,8 +3763,8 @@ class CountIntervals:
 
 """2278. Percentage of Letter in String
 
-Given a string `s` and a character `letter`, return *the **percentage** 
-of characters in* `s` *that equal* `letter` ***rounded down** to the 
+Given a string `s` and a character `letter`, return *the **percentage**
+of characters in* `s` *that equal* `letter` ***rounded down** to the
 nearest whole percent.*
 
 
@@ -3801,13 +3801,13 @@ def percentageLetter(s: str, letter: str) -> int:
 
 """2279. Maximum Bags With Full Capacity of Rocks
 
-You have `n` bags numbered from `0` to `n - 1`. You are given two 
-**0-indexed** integer arrays `capacity` and `rocks`. The `ith` bag can 
-hold a maximum of `capacity[i]` rocks and currently contains `rocks[i]` 
-rocks. You are also given an integer `additionalRocks`, the number of 
+You have `n` bags numbered from `0` to `n - 1`. You are given two
+**0-indexed** integer arrays `capacity` and `rocks`. The `ith` bag can
+hold a maximum of `capacity[i]` rocks and currently contains `rocks[i]`
+rocks. You are also given an integer `additionalRocks`, the number of
 additional rocks you can place in **any** of the bags.
 
-Return *the **maximum** number of bags that could have full capacity 
+Return *the **maximum** number of bags that could have full capacity
 after placing the additional rocks in some bags.*
 
 
@@ -3869,11 +3869,11 @@ def maximumBags(capacity: List[int], rocks: List[int], additionalRocks: int) -> 
 
 """2280. Minimum Lines to Represent a Line Chart
 
-You are given a 2D integer array `stockPrices` where `stockPrices[i] = 
-[dayi, pricei]` indicates the price of the stock on day `dayi` is 
-`pricei`. A **line chart** is created from the array by plotting the 
-points on an XY plane with the X-axis representing the day and the 
-Y-axis representing the price and connecting adjacent points. One such 
+You are given a 2D integer array `stockPrices` where `stockPrices[i] =
+[dayi, pricei]` indicates the price of the stock on day `dayi` is
+`pricei`. A **line chart** is created from the array by plotting the
+points on an XY plane with the X-axis representing the day and the
+Y-axis representing the price and connecting adjacent points. One such
 example is shown below:
 
 ![img](https://assets.leetcode.com/uploads/2022/03/30/1920px-pushkin_population_historysvg.png)
@@ -3972,20 +3972,20 @@ def minimumLines(stockPrices: List[List[int]]) -> int:
 
 As the ruler of a kingdom, you have an army of wizards at your command.
 
-You are given a **0-indexed** integer array `strength`, where 
-`strength[i]` denotes the strength of the `ith` wizard. For a 
-**contiguous** group of wizards (i.e. the wizards' strengths form a 
-**subarray** of `strength`), the **total strength** is defined as the 
+You are given a **0-indexed** integer array `strength`, where
+`strength[i]` denotes the strength of the `ith` wizard. For a
+**contiguous** group of wizards (i.e. the wizards' strengths form a
+**subarray** of `strength`), the **total strength** is defined as the
 **product** of the following two values:
 
 - The strength of the **weakest** wizard in the group.
 - The **total** of all the individual strengths of the wizards in the group.
 
-Return *the **sum** of the total strengths of **all** contiguous groups 
-of wizards*. Since the answer may be very large, return it **modulo** 
+Return *the **sum** of the total strengths of **all** contiguous groups
+of wizards*. Since the answer may be very large, return it **modulo**
 `109 + 7`.
 
-A **subarray** is a contiguous **non-empty** sequence of elements 
+A **subarray** is a contiguous **non-empty** sequence of elements
 within an array.
 
 
@@ -4013,7 +4013,7 @@ The sum of all the total strengths is 1 + 9 + 1 + 4 + 4 + 4 + 3 + 5 + 6 + 7 = 44
 ```
 Input: strength = [5,4,6]
 Output: 213
-Explanation: The following are all the contiguous groups of wizards: 
+Explanation: The following are all the contiguous groups of wizards:
 - [5] from [5,4,6] has a total strength of min([5]) * sum([5]) = 5 * 5 = 25
 - [4] from [5,4,6] has a total strength of min([4]) * sum([4]) = 4 * 4 = 16
 - [6] from [5,4,6] has a total strength of min([6]) * sum([6]) = 6 * 6 = 36
@@ -4087,10 +4087,10 @@ def totalStrength(self, s: List[int]) -> int:
 
 """2283. Check if Number Has Equal Digit Count and Digit Value
 
-You are given a **0-indexed** string `num` of length `n` consisting of 
+You are given a **0-indexed** string `num` of length `n` consisting of
 digits.
 
-Return `true` *if for **every** index* `i` *in the range* `0 <= i < n`*, 
+Return `true` *if for **every** index* `i` *in the range* `0 <= i < n`*,
 the digit* `i` *occurs* `num[i]` *times in* `num`*, otherwise return* `false`.
 
 
@@ -4138,17 +4138,17 @@ def digitCount(num: str) -> bool:
 
 """2284. Sender With Largest Word Count
 
-You have a chat log of `n` messages. You are given two string arrays 
-`messages` and `senders` where `messages[i]` is a **message** sent by 
+You have a chat log of `n` messages. You are given two string arrays
+`messages` and `senders` where `messages[i]` is a **message** sent by
 `senders[i]`.
 
-A **message** is list of **words** that are separated by a single space 
-with no leading or trailing spaces. The **word count** of a sender is 
-the total number of **words** sent by the sender. Note that a sender may 
+A **message** is list of **words** that are separated by a single space
+with no leading or trailing spaces. The **word count** of a sender is
+the total number of **words** sent by the sender. Note that a sender may
 send more than one message.
 
-Return *the sender with the **largest** word count*. If there is more 
-than one sender with the largest word count, return *the one with the 
+Return *the sender with the **largest** word count*. If there is more
+than one sender with the largest word count, return *the one with the
 **lexicographically largest** name*.
 
 **Note:**
@@ -4160,7 +4160,7 @@ than one sender with the largest word count, return *the one with the
 **Example 1:**
 
 ```
-Input: messages = ["Hello userTwooo","Hi userThree","Wonderful day 
+Input: messages = ["Hello userTwooo","Hi userThree","Wonderful day
 Alice","Nice day userThree"], senders = ["Alice","userTwo","userThree","Alice"]
 Output: "Alice"
 Explanation: Alice sends a total of 2 + 3 = 5 words.
@@ -4172,12 +4172,12 @@ Since Alice has the largest word count, we return "Alice".
 **Example 2:**
 
 ```
-Input: messages = ["How is leetcode for everyone","Leetcode is useful 
+Input: messages = ["How is leetcode for everyone","Leetcode is useful
 for practice"], senders = ["Bob","Charlie"]
 Output: "Charlie"
 Explanation: Bob sends a total of 5 words.
 Charlie sends a total of 5 words.
-Since there is a tie for the largest word count, we return the sender 
+Since there is a tie for the largest word count, we return the sender
 with the lexicographically larger name, Charlie.
 ```
 
@@ -4208,18 +4208,18 @@ def largestWordCount(messages: List[str], senders: List[str]) -> str:
 
 """2285. Maximum Total Importance of Roads
 
-You are given an integer `n` denoting the number of cities in a country. 
+You are given an integer `n` denoting the number of cities in a country.
 The cities are numbered from `0` to `n - 1`.
 
-You are also given a 2D integer array `roads` where `roads[i] = [ai, bi]` 
-denotes that there exists a **bidirectional** road connecting cities `ai` 
+You are also given a 2D integer array `roads` where `roads[i] = [ai, bi]`
+denotes that there exists a **bidirectional** road connecting cities `ai`
 and `bi`.
 
-You need to assign each city with an integer value from `1` to `n`, 
-where each value can only be used **once**. The **importance** of a road 
+You need to assign each city with an integer value from `1` to `n`,
+where each value can only be used **once**. The **importance** of a road
 is then defined as the **sum** of the values of the two cities it connects.
 
-Return *the **maximum total importance** of all roads possible after 
+Return *the **maximum total importance** of all roads possible after
 assigning the values optimally.*
 
 
@@ -4282,38 +4282,38 @@ def maximumImportance(n: int, roads: List[List[int]]) -> int:
 
 """2286. Booking Concert Tickets in Groups
 
-A concert hall has `n` rows numbered from `0` to `n - 1`, each with `m` 
-seats, numbered from `0` to `m - 1`. You need to design a ticketing 
+A concert hall has `n` rows numbered from `0` to `n - 1`, each with `m`
+seats, numbered from `0` to `m - 1`. You need to design a ticketing
 system that can allocate seats in the following cases:
 
 - If a group of `k` spectators can sit **together** in a row.
-- If **every** member of a group of `k` spectators can get a seat. They 
+- If **every** member of a group of `k` spectators can get a seat. They
 may or **may not** sit together.
 
 Note that the spectators are very picky. Hence:
 
-- They will book seats only if each member of their group can get a seat 
-with row number **less than or equal** to `maxRow`. `maxRow` can 
+- They will book seats only if each member of their group can get a seat
+with row number **less than or equal** to `maxRow`. `maxRow` can
 **vary** from group to group.
-- In case there are multiple rows to choose from, the row with the 
-**smallest** number is chosen. If there are multiple seats to choose in 
+- In case there are multiple rows to choose from, the row with the
+**smallest** number is chosen. If there are multiple seats to choose in
 the same row, the seat with the **smallest** number is chosen.
 
 Implement the `BookMyShow` class:
 
-- `BookMyShow(int n, int m)` Initializes the object with `n` as number 
+- `BookMyShow(int n, int m)` Initializes the object with `n` as number
 of rows and `m` as number of seats per row.
-- `int[] gather(int k, int maxRow)` Returns an array of length `2` 
-denoting the row and seat number (respectively) of the **first seat** 
-being allocated to the `k` members of the group, who must sit 
-**together**. In other words, it returns the smallest possible `r` and 
-`c` such that all `[c, c + k - 1]` seats are valid and empty in row `r`, 
-and `r <= maxRow`. Returns `[]` in case it is **not possible** to 
+- `int[] gather(int k, int maxRow)` Returns an array of length `2`
+denoting the row and seat number (respectively) of the **first seat**
+being allocated to the `k` members of the group, who must sit
+**together**. In other words, it returns the smallest possible `r` and
+`c` such that all `[c, c + k - 1]` seats are valid and empty in row `r`,
+and `r <= maxRow`. Returns `[]` in case it is **not possible** to
 allocate seats to the group.
-- `boolean scatter(int k, int maxRow)` Returns `true` if all `k` members 
-of the group can be allocated seats in rows `0` to `maxRow`, who may or 
-**may not** sit together. If the seats can be allocated, it allocates `k` 
-seats to the group with the **smallest** row numbers, and the smallest 
+- `boolean scatter(int k, int maxRow)` Returns `true` if all `k` members
+of the group can be allocated seats in rows `0` to `maxRow`, who may or
+**may not** sit together. If the seats can be allocated, it allocates `k`
+seats to the group with the **smallest** row numbers, and the smallest
 possible seat numbers in each row. Otherwise, returns `false`.
 
 
@@ -4327,14 +4327,14 @@ Output
 [null, [0, 0], [], true, false]
 
 Explanation
-BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each 
+BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each
 bms.gather(4, 0); // return [0, 0]
-                  // The group books seats [0, 3] of row 0. 
+                  // The group books seats [0, 3] of row 0.
 bms.gather(2, 0); // return []
                   // There is only 1 seat left in row 0,
-                  // so it is not possible to book 2 consecutive seats. 
+                  // so it is not possible to book 2 consecutive seats.
 bms.scatter(5, 1); // return True
-                   // The group books seat 4 of row 0 and seats [0, 3] of row 1. 
+                   // The group books seat 4 of row 0 and seats [0, 3] of row 1.
 bms.scatter(5, 1); // return False
                    // There are only 2 seats left in the hall.
 ```
@@ -4455,10 +4455,10 @@ class BookMyShow:
 
 """2287. Rearrange Characters to Make Target String
 
-You are given two **0-indexed** strings `s` and `target`. You can take 
+You are given two **0-indexed** strings `s` and `target`. You can take
 some letters from `s` and rearrange them to form new strings.
 
-Return *the **maximum** number of copies of* `target` *that can be 
+Return *the **maximum** number of copies of* `target` *that can be
 formed by taking letters from* `s` *and rearranging them.*
 
 
@@ -4515,17 +4515,17 @@ def rearrangeCharacters(s: str, target: str) -> int:
 
 """2288. Apply Discount to Prices
 
-A **sentence** is a string of single-space separated words where each 
-word can contain digits, lowercase letters, and the dollar sign `'$'`. 
-A word represents a **price** if it is a non-negative real number 
+A **sentence** is a string of single-space separated words where each
+word can contain digits, lowercase letters, and the dollar sign `'$'`.
+A word represents a **price** if it is a non-negative real number
 preceded by a dollar sign.
 
-- For example, `"$100"`, `"$23"`, and `"$6.75"` represent prices while 
+- For example, `"$100"`, `"$23"`, and `"$6.75"` represent prices while
 `"100"`, `"$"`, and `"2$3"` do not.
 
-You are given a string `sentence` representing a sentence and an integer 
-`discount`. For each word representing a price, apply a discount of 
-`discount%` on the price and **update** the word in the sentence. All 
+You are given a string `sentence` representing a sentence and an integer
+`discount`. For each word representing a price, apply a discount of
+`discount%` on the price and **update** the word in the sentence. All
 updated prices should be represented with **exactly two** decimal places.
 
 Return *a string representing the modified sentence*.
@@ -4536,8 +4536,8 @@ Return *a string representing the modified sentence*.
 ```
 Input: sentence = "there are $1 $2 and 5$ candies in the shop", discount = 50
 Output: "there are $0.50 $1.00 and 5$ candies in the shop"
-Explanation: 
-The words which represent prices are "$1" and "$2". 
+Explanation:
+The words which represent prices are "$1" and "$2".
 - A 50% discount on "$1" yields "$0.50", so "$1" is replaced by "$0.50".
 - A 50% discount on "$2" yields "$1". Since we need to have exactly 2 decimal places after a price, we replace "$2" with "$1.00".
 ```
@@ -4547,7 +4547,7 @@ The words which represent prices are "$1" and "$2".
 ```
 Input: sentence = "1 2 $3 4 $5 $6 7 8$ $9 $10$", discount = 100
 Output: "1 2 $0.00 4 $0.00 $0.00 7 8$ $0.00 $10$"
-Explanation: 
+Explanation:
 Applying a 100% discount on any price will result in 0.
 The words representing prices are "$3", "$5", "$6", and "$9".
 Each of them is replaced by "$0.00".
@@ -4583,11 +4583,11 @@ def discountPrices(sentence: str, discount: int) -> str:
 
 """2289. Steps to Make Array Non-decreasing
 
-You are given a **0-indexed** integer array `nums`. In one step, 
-**remove** all elements `nums[i]` where `nums[i - 1] > nums[i]` for all 
+You are given a **0-indexed** integer array `nums`. In one step,
+**remove** all elements `nums[i]` where `nums[i - 1] > nums[i]` for all
 `0 < i < nums.length`.
 
-Return *the number of steps performed until* `nums` *becomes a 
+Return *the number of steps performed until* `nums` *becomes a
 **non-decreasing** array*.
 
 
@@ -4647,7 +4647,7 @@ def totalSteps(nums: List[int]) -> int:
 
 """2290. Minimum Obstacle Removal to Reach Corner
 
-You are given a **0-indexed** 2D integer array `grid` of size `m x n`. 
+You are given a **0-indexed** 2D integer array `grid` of size `m x n`.
 Each cell has one of two values:
 
 - `0` represents an **empty** cell,
@@ -4655,8 +4655,8 @@ Each cell has one of two values:
 
 You can move up, down, left, or right from and to an empty cell.
 
-Return *the **minimum** number of **obstacles** to **remove** so you 
-can move from the upper left corner* `(0, 0)` *to the lower right 
+Return *the **minimum** number of **obstacles** to **remove** so you
+can move from the upper left corner* `(0, 0)` *to the lower right
 corner* `(m - 1, n - 1)`.
 
 
@@ -4972,7 +4972,7 @@ Note that an integer `x` divides `y` if `y % x == 0`.
 ```
 Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
 Output: 2
-Explanation: 
+Explanation:
 The smallest element in [2,3,2,4,3] is 2, which does not divide all the elements of numsDivide.
 We use 2 deletions to delete the elements in nums that are equal to 2 which makes nums = [3,4,3].
 The smallest element in [3,4,3] is 3, which divides all the elements of numsDivide.
@@ -4984,7 +4984,7 @@ It can be shown that 2 is the minimum number of deletions needed.
 ```
 Input: nums = [4,3,6], numsDivide = [8,2,6,10]
 Output: -1
-Explanation: 
+Explanation:
 We want the smallest element in nums to divide all the elements of numsDivide.
 There is no way to delete elements from nums to allow this.
 ```
@@ -5011,12 +5011,12 @@ def minOperations(nums: List[int], numsDivide: List[int]) -> int:
 
 """2351. First Letter to Appear Twice
 
-Given a string `s` consisting of lowercase English letters, return *the 
+Given a string `s` consisting of lowercase English letters, return *the
 first letter to appear **twice***.
 
 **Note**:
 
-- A letter `a` appears twice before another letter `b` if the **second** 
+- A letter `a` appears twice before another letter `b` if the **second**
 occurrence of `a` is before the **second** occurrence of `b`.
 - `s` will contain at least one letter that appears twice.
 
@@ -5063,10 +5063,10 @@ def repeatedCharacter(s: str) -> str:
 
 """2352. Equal Row and Column Pairs
 
-Given a **0-indexed** `n x n` integer matrix `grid`, *return the number 
+Given a **0-indexed** `n x n` integer matrix `grid`, *return the number
 of pairs* `(Ri, Cj)` *such that row* `Ri` *and column* `Cj` *are equal*.
 
-A row and column pair is considered equal if they contain the same 
+A row and column pair is considered equal if they contain the same
 elements in the same order (i.e. an equal array).
 
 

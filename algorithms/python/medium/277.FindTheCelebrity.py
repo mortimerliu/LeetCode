@@ -83,7 +83,7 @@ class Solution:
 
         """
         Solution 2: get the most informatin gain
-        
+
         For `knows(a, b)`:
             if the result is True, then a is not the celebrity
             if the result if False, then b is not the celebrity

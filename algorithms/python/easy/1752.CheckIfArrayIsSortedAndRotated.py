@@ -88,9 +88,9 @@ class Solution:
         # return True
 
         """
-        Solution 3: treat the array as a circle and consider nums[0] as 
-        the next element of nums[-1] 
-        then we can only have at most 1 time of the case where 
+        Solution 3: treat the array as a circle and consider nums[0] as
+        the next element of nums[-1]
+        then we can only have at most 1 time of the case where
         nums[i] > nums[i-1]
         """
         count = 0

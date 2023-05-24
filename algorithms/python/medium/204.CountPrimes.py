@@ -69,7 +69,7 @@ class Solution:
 
         """
         Solution 2: Sieve of Eratosthenes
-        
+
         once we know 2 is a prime number, we can eliminate all multiples of 2
         once we know 3 is a prime number, we can eliminate all muliples of 3
         ...

@@ -72,20 +72,20 @@ class Solution:
         """
         Solution 2: DP & Stack - Iterate forward
         For index i,
-        * if it is max so far, no need to remove 
+        * if it is max so far, no need to remove
         * else, it needs to be removed
           * to remove it, we need to first remove all numbers on its
             left and is smaller than it
-        
+
         we can use a stack to maintain this - non increasing stack
-        
-        Example: 
+
+        Example:
         * number indicates how many steps to remove
         * ! note it's 4 instead of 3 as there is a number smaller than it
           requring 3 steps to remove (*).
                        0
         0             /
-         \           4! 
+         \           4!
           \   3*    /
            \ 2 1   /
             1   \ 2
@@ -107,31 +107,31 @@ class Solution:
 
         """
         Solution 3: DP & Stack - Iterate backward
-        When looking from backward, nums[i] can only be added to the 
-        list when there are no numbers on the right that is smaller than 
+        When looking from backward, nums[i] can only be added to the
+        list when there are no numbers on the right that is smaller than
         itself - this can be achieved using a monotonic stack
-        
-        the meaning of dp is different from solution 2: now the dp[i] 
-        means # of steps to remove all numbers to the right of nums[i] 
-        ( # items that are eaten by itme i) before we can add nums[i] to 
+
+        the meaning of dp is different from solution 2: now the dp[i]
+        means # of steps to remove all numbers to the right of nums[i]
+        ( # items that are eaten by itme i) before we can add nums[i] to
         the resulting attary
-        
-        lets say we have a sequence [15, 2, 11, 13, 15]. And before we 
+
+        lets say we have a sequence [15, 2, 11, 13, 15]. And before we
         reach this, "11" ate 10 elements.
 
-        
+
              15 2 11 13 15
         dp -> 0 0 10  0  0
-        
-        so how many steps "15" needs to eat until "13"? 
-          * from 15's perspective, it will need eat 3 steps to consume 
-            [2,11,13]. 
-          * but 11 is taking its time to eat the 10 elements. 
-          * When 15 is eating, **concurrently** 11 is eating its share 
-            as well. 
-          * When 15 catches up with 11, it will be eating the remaining 
-            of 11's share in 11's place. so the time take for 15 to eat 
-            everything will be max(3, 10). 
+
+        so how many steps "15" needs to eat until "13"?
+          * from 15's perspective, it will need eat 3 steps to consume
+            [2,11,13].
+          * but 11 is taking its time to eat the 10 elements.
+          * When 15 is eating, **concurrently** 11 is eating its share
+            as well.
+          * When 15 catches up with 11, it will be eating the remaining
+            of 11's share in 11's place. so the time take for 15 to eat
+            everything will be max(3, 10).
         """
         n = len(nums)
         stack = []

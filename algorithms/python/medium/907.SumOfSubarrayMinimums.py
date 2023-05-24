@@ -59,10 +59,10 @@ class Solution:
 
         """
         Solution 2: monotonic stack (non decreasing)
-        
+
         for equals, left < right
-        
-        for each `i`, 
+
+        for each `i`,
         * find min index `left` such that all(nums[j] > nums[i] for left <= j < i)
         * find max index `right` such that all(nums[j] >= nums[i] for i < j <= right)
         * ans += nums[i] * (i - left + 1) * (right - i + 1)
@@ -81,7 +81,7 @@ class Solution:
 
         """
         Solution 3: mono stack + dp
-        
+
         dp[i]: sum of min for all subarrays ending at index i
         dp[i] = dp[j] + (i - j) * nums[i]
         where j is the min index where nums[j] < nums[i]

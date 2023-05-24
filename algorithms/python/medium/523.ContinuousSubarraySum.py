@@ -82,7 +82,7 @@ class Solution:
 
         """
         Solution 2: prefix array - TLE
-        sum(nums[i:j]) = sum(nums[j]) - sum(nums[i]) 
+        sum(nums[i:j]) = sum(nums[j]) - sum(nums[i])
         """
         # n = len(nums)
         # if n < 2:
@@ -97,16 +97,16 @@ class Solution:
         # return False
 
         """
-        Solution 3: 
+        Solution 3:
         sum(nums[i:j]) = sum(nums[j]) - sum(nums[i])
         if sum(nums[i:j]) % k == 0
         then sum(nums[j]) % k == sum(nums[i]) % k
-        
+
         thus we can convert the question to: find if there are two prefix sum
         that has same remainder.
-        
+
         one trick is that, given the length of two requirement, the two prefix
-        sum cannot be contiguous. We can use a hashmap to do this. 
+        sum cannot be contiguous. We can use a hashmap to do this.
         """
         if len(nums) < 2:
             return False

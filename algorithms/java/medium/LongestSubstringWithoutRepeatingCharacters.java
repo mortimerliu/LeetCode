@@ -5,25 +5,25 @@ import java.util.Map;
 
 /**
  * [Medium] 3. Longest Substring Without Repeating Characters
- * 
+ *
  * Given a string s, find the length of the longest substring without repeating
  * characters.
- * 
+ *
  * Example 1:
- * 
+ *
  * Input: s = "abcabcbb"
  * Output: 3
- * 
+ *
  * Example 2:
- * 
+ *
  * Input: s = "pwwkew"
  * Output: 3
- * 
+ *
  * Constraints:
- * 
+ *
  * * 0 <= s.length <= 5 * 104
  * * s consists of English letters, digits, symbols and spaces.
- * 
+ *
  * @author Hongru Liu
  */
 class Solution {
@@ -31,7 +31,7 @@ class Solution {
         /**
          * use a HashMap to record the last index of a letter
          * ans = max(ans, cur_idx - last_idx)
-         * 
+         *
          * if the character set is small, we can use an array to replace
          * HashMap; though it's still O(1), the constant factor is smaller
          *

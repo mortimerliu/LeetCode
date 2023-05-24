@@ -64,7 +64,7 @@ class Solution:
         1. positive numbers are always good to include
         2. negative numbers should be included only if there are even appearance
         3. never across 0
-        
+
         with there three obs, then we want to include as much as possible while
         not across 0, and when there is negative number, only consider extend
         the first neg number or not
@@ -87,8 +87,8 @@ class Solution:
         Solution 3: DP
         max_so_far = max(cur, max_so_far * cur, min_so_far * cur)
         min_so_far = min(cur, max_so_far * cur, min_so_far * cur)
-        
-        Example: 
+
+        Example:
         cur:            pos1 neg1      pos2           neg2                neg3
         max_so_far:  1  pos1 neg1      pos2           pos1*neg1*pos2*neg2 pos2*neg2*neg3
         min_so_far:  1  pos1 pos1*neg1 pos1*neg*1pos2 pos2*neg2           pos1*neg1*pos2*neg2*neg3
@@ -110,17 +110,17 @@ class Solution:
 
         """
         Solution 4: the max product subarray must reach either begin of end of nums
-        
+
         For even number of neg, we just include all nums.
         For odd number of neg: we need to abandan 1 neg.
-        
+
         <------candi1----->
         pos,neg,pos,neg,pos,neg,pos
                 <------candi2----->
-        
-        For zeros, they just split the long nums into several small nums and 
+
+        For zeros, they just split the long nums into several small nums and
         we can condier them independently.
-        
+
         Algo:
         Calculate prefix product in nums.
         Calculate suffix product in nums.
