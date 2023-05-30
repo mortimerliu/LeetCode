@@ -1,12 +1,26 @@
+- [Summary](#summary)
+- [Abstract Data-Type (ADT)](#abstract-data-type-adt)
+  - [Priority Queue](#priority-queue)
+- [Data Structure](#data-structure)
+  - [Heap](#heap)
+  - [Bianry Heap](#bianry-heap)
+  - [Self-Balancing Binary Search Tree](#self-balancing-binary-search-tree)
+  - [AVL Tree](#avl-tree)
+  - [Red–Black Tree](#redblack-tree)
+  - [Disjoint-Set](#disjoint-set)
+
 # Summary
 
-* Priority Queue
-  * [Heap](#heap)
-    * [Binary Heap](#bianry-heap)
-  * [Self-Balancing Binary Search Tree](#self-balancing-binary-search-tree)
-    * [AVL Tree](#avl-tree)
-    * [Red–Black Tree](#red–black-tree)
-* [Disjoint-Set](#disjoint-set)
+- [Summary](#summary)
+- [Abstract Data-Type (ADT)](#abstract-data-type-adt)
+  - [Priority Queue](#priority-queue)
+- [Data Structure](#data-structure)
+  - [Heap](#heap)
+  - [Bianry Heap](#bianry-heap)
+  - [Self-Balancing Binary Search Tree](#self-balancing-binary-search-tree)
+  - [AVL Tree](#avl-tree)
+  - [Red–Black Tree](#redblack-tree)
+  - [Disjoint-Set](#disjoint-set)
 
 # Abstract Data-Type (ADT)
 
@@ -19,7 +33,7 @@ A priority queue is an **abstract data-type** similar to a regular queue or stac
 
 Stacks and queues can be implemented as particular kinds of priority queues, with the priority determined by the order in which the elements are inserted.
 
-## Operations
+### Operations<!-- omit from toc -->
 
 A priority queue must at least support the following operations:
 
@@ -38,7 +52,7 @@ More advanced implementations may support more complicated operations, such as:
 * merging two or more queues into one
 * incrementing priority of any element
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 * [heap](#heap)
   * insert: $O(\text{log} n)$
@@ -65,7 +79,7 @@ A **heap** is a specialized tree-based data structure which is essentially an al
 
 The heap is one *maximally efficient* implementation of a [priority queue](#priority-queue).
 
-### Operations
+### Operations<!-- omit from toc -->
 
 For max heap:
 
@@ -84,14 +98,14 @@ For max heap:
 * `delete`: delete an arbitrary node
 * `sift-up`, `sift-down`: move a node up/down in the tree, as long as needed; used to restore heap condition after insertion
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 Heaps are usually implemented with an array, as follows:
 
 * Each element in the array represents a node of the heap.
 * The parent/child relationship is defined implicitly by the elements' indices in the array.
 
-#### Common variants
+#### Common variants<!-- omit from toc -->
 
 * [Binary heap](#bianry-heap)
 
@@ -106,7 +120,7 @@ A **binary heap** is a heap data structure that takes the form of a binary tree 
 
 Binary heaps are a common way of implementing priority queues.
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 Heaps are commonly implemented with an array.
 
@@ -142,7 +156,7 @@ For **height-balanced** binary trees, the height is defined to be logarithmic $O
 
 In the asymptotic ("Big-O") sense, a self-balancing BST structure containing n items allows the lookup, insertion, and removal of an item in $O(\log n)$ worst-case time, and ordered enumeration of all items in $O(n)$ time.
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 * [AVL tree](#avl-tree)
   | Operation | Amortized   | Worst case  |
@@ -165,7 +179,7 @@ An **AVL tree** (named after inventors Adelson-Velsky and Landis) is a self-bala
 * If at any time they differ by more than one, rebalancing is done to restore this property.\
 * Lookup, insertion, and deletion all take $O(\log n)$ time in both the average and worst cases.
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 **Complexity**
 
@@ -181,7 +195,7 @@ A **red–black tree** is a specialised binary search tree data structure noted 
 
 * The nodes in a red-black tree hold an extra bit called "color" representing "red" and "black" which is used when re-organising the tree to ensure that it is always approximately balanced.
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 **Complexity**
 
@@ -195,7 +209,7 @@ A **red–black tree** is a specialised binary search tree data structure noted 
 
 A **disjoint-set** data structure, also called a union-find data structure or merge-find set, is a data structure that stores a collection of disjoint (non-overlapping) sets.
 
-### Implementation
+### Implementation<!-- omit from toc -->
 
 * [Java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/common/DisjointSet.java)
 * [Python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/common/disjoint_set.py)
