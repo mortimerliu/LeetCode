@@ -9,18 +9,16 @@
   - [Red–Black Tree](#redblack-tree)
   - [Disjoint-Set](#disjoint-set)
 
-# Summary
 
-- [Summary](#summary)
-- [Abstract Data-Type (ADT)](#abstract-data-type-adt)
-  - [Priority Queue](#priority-queue)
-- [Data Structure](#data-structure)
-  - [Heap](#heap)
-  - [Bianry Heap](#bianry-heap)
-  - [Self-Balancing Binary Search Tree](#self-balancing-binary-search-tree)
-  - [AVL Tree](#avl-tree)
-  - [Red–Black Tree](#redblack-tree)
-  - [Disjoint-Set](#disjoint-set)
+# Summary
+<!-- no toc -->
+* [Priority Queue](#priority-queue)
+  * [Heap](#heap)
+    * [Binary Heap](#bianry-heap)
+  * [Self-Balancing Binary Search Tree](#self-balancing-binary-search-tree)
+    * [AVL Tree](#avl-tree)
+    * [Red–Black Tree](#red–black-tree)
+* [Disjoint-Set](#disjoint-set)
 
 # Abstract Data-Type (ADT)
 
