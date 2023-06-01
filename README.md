@@ -53,6 +53,7 @@ Will add new problems from weekly and biweekly contests once the contests are ov
 | 20 | [ValidParentheses](https://leetcode.com/problems/valid-parentheses/description/) |[java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/easy/20.ValidParentheses.java), [python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/easy/20.ValidParentheses.java) | easy |
 | 18 | [4Sum](https://leetcode.com/problems/4sum/description/) |[java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/medium/18.4Sum.java), [python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/medium/18.4Sum.java) | medium |
 | 15 | [3Sum](https://leetcode.com/problems/3sum/description/) |[java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/medium/15.3Sum.java), [python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/medium/15.3Sum.java) | medium |
+| 14 | [LongestCommonPrefix](https://leetcode.com/problems/longest-common-prefix/description/) |[java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/easy/14.LongestCommonPrefix.java), [python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/easy/14.LongestCommonPrefix.java) | easy |
 | 1 | [TwoSum](https://leetcode.com/problems/two-sum/description/) |[java](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/java/easy/1.TwoSum.java), [python](https://github.com/mortimerliu/LeetCode/blob/main/algorithms/python/easy/1.TwoSum.java) | easy |
 
 
