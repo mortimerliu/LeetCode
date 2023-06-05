@@ -5,6 +5,8 @@ repos:
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
 -   repo: https://github.com/mortimerliu/leetcode-readme
-    rev: 'v0.0.2'
+    rev: '2bdc93359710406fabca59f5fe83d176c238b8cd'
     hooks:
     -   id: leetcode-readme
+    -   id: cleanup-files
+        args: [-v]
