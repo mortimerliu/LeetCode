@@ -1,12 +1,12 @@
 # [Deterministic Finite Automaton (DFA)](https://en.wikipedia.org/wiki/Deterministic_finite_automaton) <!-- omit from toc -->
 
-- [A short introduction to DFA](#a-short-introduction-to-dfa)
-- [LeetCode problems which can be solved using DFA](#leetcode-problems-which-can-be-solved-using-dfa)
+- [A Short Introduction to DFA](#a-short-introduction-to-dfa)
+- [LeetCode Problems Which Can Be Solved Using DFA](#leetcode-problems-which-can-be-solved-using-dfa)
 - [String to Integer ATOI](#string-to-integer-atoi)
 
 In the theory of computation, a branch of theoretical computer science, a **deterministic finite automaton** (DFA) is a **finite-state machine** that accepts or rejects a given string of symbols, by running through a state sequence uniquely determined by the string. *Deterministic* refers to the uniqueness of the computation run.
 
-## A short introduction to DFA
+## A Short Introduction to DFA
 
 **Theory of Computing** is the study of theoretical machines and problems which can be solved using these machines. These machines are called **state machines**. A state machine reads some input and changes the states based on those inputs. The state machines with a finite number of states are called **finite state machines**.
 
@@ -28,7 +28,7 @@ The finite state machine that either accepts or rejects a sequence of characters
 
 There is only one path for specific input from the current state to the next state in DFA. DFAs are useful to recognize patterns in data.
 
-## LeetCode problems which can be solved using DFA
+## LeetCode Problems Which Can Be Solved Using DFA
 
 - [String to Integer ATOI](https://leetcode.com/problems/string-to-integer-atoi)
 - [Valid Number](https://leetcode.com/problems/valid-number/)
